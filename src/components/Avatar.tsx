@@ -111,21 +111,25 @@ const PHOTOS: Record<string, number> = {
   'yossi-banai': require('../../assets/characters/yossi-banai.png'),
 };
 
+const ASPECT = 1.25; // vertical rectangle, same for every character
+
 export default function Avatar({ character, size = 180 }: Props) {
   const photo = PHOTOS[character.id];
 
   if (photo) {
+    const width = size;
+    const height = size * ASPECT;
     return (
       <View
         style={{
-          width: size,
-          height: size,
-          borderRadius: size / 2,
+          width,
+          height,
+          borderRadius: 16,
           overflow: 'hidden',
           backgroundColor: '#FAF5E9',
         }}
       >
-        <Image source={photo} style={{ width: size, height: size }} resizeMode="cover" />
+        <Image source={photo} style={{ width, height }} resizeMode="cover" />
       </View>
     );
   }
