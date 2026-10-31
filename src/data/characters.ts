@@ -107,16 +107,36 @@ export const CHARACTERS: Character[] = [
   { id: 'blaze', name: 'בלייז', category: 'cartoon' },
 ];
 
-// Categories currently played. 'singer' and 'politician' are kept in CHARACTERS
-// (real people, not characters from a movie/show/game) so they can be brought
-// back later, e.g. behind a category picker, without re-sourcing images.
+// Default categories played. 'singer' and 'politician' are real people, not
+// characters from a movie/show/game, so they default off, but stay selectable
+// via the category picker.
 export const ACTIVE_CATEGORIES: Character['category'][] = ['il-character', 'intl-character', 'cartoon'];
 
-export function activeCharacters(): Character[] {
-  return CHARACTERS.filter((c) => ACTIVE_CATEGORIES.includes(c.category));
+export const ALL_CATEGORIES: Character['category'][] = [
+  'il-character',
+  'intl-character',
+  'cartoon',
+  'singer',
+  'politician',
+];
+
+export const CATEGORY_LABELS: Record<Character['category'], string> = {
+  'il-character': 'דמויות ישראליות',
+  'intl-character': 'דמויות מסרטים',
+  cartoon: 'דמויות מצוירות',
+  singer: 'זמרים',
+  politician: 'פוליטיקאים',
+};
+
+export function charactersInCategories(categories: Character['category'][]): Character[] {
+  return CHARACTERS.filter((c) => categories.includes(c.category));
 }
 
-export function randomCharacter(excludeId?: string): Character {
-  const pool = activeCharacters().filter((c) => c.id !== excludeId);
+export function activeCharacters(): Character[] {
+  return charactersInCategories(ACTIVE_CATEGORIES);
+}
+
+export function randomCharacter(excludeId?: string, categories: Character['category'][] = ACTIVE_CATEGORIES): Character {
+  const pool = charactersInCategories(categories).filter((c) => c.id !== excludeId);
   return pool[Math.floor(Math.random() * pool.length)];
 }
