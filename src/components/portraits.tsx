@@ -3,7 +3,7 @@ import Svg, { Circle, Ellipse, Path, Polygon, Rect } from 'react-native-svg';
 
 type PortraitProps = { size: number };
 
-// ---------- fictional / puppet & animal characters ----------
+// ---------- drawn characters (no usable real photo/art found) ----------
 
 function Pucho({ size }: PortraitProps) {
   return (
@@ -37,29 +37,11 @@ function Kofiko({ size }: PortraitProps) {
   );
 }
 
-function Chafuzik({ size }: PortraitProps) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 200 200">
-      <Circle cx="100" cy="100" r="100" fill="#D6F5E3" />
-      <Circle cx="100" cy="112" r="60" fill="#3FB4E8" />
-      <Polygon points="85,45 100,15 115,45" fill="#2E91C2" />
-      <Circle cx="82" cy="108" r="14" fill="#fff" />
-      <Circle cx="118" cy="108" r="14" fill="#fff" />
-      <Circle cx="82" cy="110" r="6" fill="#1B2A3A" />
-      <Circle cx="118" cy="110" r="6" fill="#1B2A3A" />
-      <Path d="M80 140 Q100 158 120 140" stroke="#1B2A3A" strokeWidth="5" fill="none" strokeLinecap="round" />
-    </Svg>
-  );
-}
-
 function Shmulikipod({ size }: PortraitProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 200 200">
       <Circle cx="100" cy="100" r="100" fill="#F3E8D2" />
-      <Path
-        d="M55 110 Q50 60 100 55 Q150 60 145 110 Q150 150 100 160 Q50 150 55 110 Z"
-        fill="#8B6A4A"
-      />
+      <Path d="M55 110 Q50 60 100 55 Q150 60 145 110 Q150 150 100 160 Q50 150 55 110 Z" fill="#8B6A4A" />
       {[...Array(9)].map((_, i) => {
         const x = 55 + i * 11;
         return <Polygon key={i} points={`${x},80 ${x + 7},80 ${x + 3.5},45`} fill="#5C4328" />;
@@ -72,171 +54,225 @@ function Shmulikipod({ size }: PortraitProps) {
   );
 }
 
-function Buki({ size }: PortraitProps) {
+function MoisheOofnik({ size }: PortraitProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 200 200">
-      <Circle cx="100" cy="100" r="100" fill="#FFF0D8" />
-      <Path d="M50 70 Q35 110 55 135 L68 110 Z" fill="#C8894A" />
-      <Path d="M150 70 Q165 110 145 135 L132 110 Z" fill="#C8894A" />
-      <Circle cx="100" cy="112" r="58" fill="#E3A866" />
-      <Ellipse cx="100" cy="128" rx="34" ry="24" fill="#FBE4C4" />
-      <Circle cx="84" cy="108" r="7" fill="#2B2118" />
-      <Circle cx="116" cy="108" r="7" fill="#2B2118" />
-      <Ellipse cx="100" cy="132" rx="8" ry="6" fill="#4A2E18" />
-      <Path d="M86 145 Q100 155 114 145" stroke="#4A2E18" strokeWidth="4" fill="none" strokeLinecap="round" />
+      <Circle cx="100" cy="100" r="100" fill="#DCEAD6" />
+      <Path d="M50 130 Q45 170 70 180 L130 180 Q155 170 150 130 Z" fill="#6B6B6B" />
+      <Path d="M50 130 Q100 115 150 130 L150 140 Q100 125 50 140 Z" fill="#8A8A8A" />
+      <Circle cx="100" cy="100" r="58" fill="#6E8B3D" />
+      <Path d="M55 70 Q65 20 85 50 Q95 15 100 55 Q110 15 118 50 Q135 20 145 70" stroke="#4E6329" strokeWidth="10" fill="none" strokeLinecap="round" />
+      <Ellipse cx="80" cy="100" rx="10" ry="12" fill="#fff" />
+      <Ellipse cx="120" cy="100" rx="10" ry="12" fill="#fff" />
+      <Circle cx="80" cy="103" r="4" fill="#2B2118" />
+      <Circle cx="120" cy="103" r="4" fill="#2B2118" />
+      <Path d="M82 125 Q100 115 118 125" stroke="#3A4A20" strokeWidth="5" fill="none" strokeLinecap="round" />
     </Svg>
   );
 }
 
-function Tuki({ size }: PortraitProps) {
+function HananHanagar({ size }: PortraitProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 200 200">
-      <Circle cx="100" cy="100" r="100" fill="#DFF5E1" />
-      <Path d="M100 40 Q150 45 150 100 Q150 150 100 160 Q85 120 95 100 Q85 70 100 40 Z" fill="#2FA84F" />
-      <Path d="M100 40 Q60 55 65 95 Q68 130 95 100 Q90 70 100 40 Z" fill="#4BC96E" />
-      <Circle cx="112" cy="85" r="9" fill="#fff" />
-      <Circle cx="114" cy="85" r="4" fill="#1B2A3A" />
-      <Path d="M135 95 L160 100 L135 108 Z" fill="#F2B705" />
-      <Path d="M100 155 Q95 175 85 180 M100 155 Q105 175 115 180" stroke="#C9820C" strokeWidth="5" strokeLinecap="round" />
-    </Svg>
-  );
-}
-
-function Klavlav({ size }: PortraitProps) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 200 200">
-      <Circle cx="100" cy="100" r="100" fill="#FFE9D6" />
-      <Ellipse cx="58" cy="95" rx="16" ry="30" fill="#B5733A" />
-      <Ellipse cx="142" cy="95" rx="16" ry="30" fill="#B5733A" />
-      <Circle cx="100" cy="112" r="58" fill="#D8975C" />
-      <Ellipse cx="100" cy="130" rx="32" ry="22" fill="#F4DCB8" />
-      <Circle cx="85" cy="110" r="6" fill="#2B2118" />
-      <Circle cx="115" cy="110" r="6" fill="#2B2118" />
-      <Ellipse cx="100" cy="128" rx="8" ry="6" fill="#2B2118" />
-      <Path d="M86 144 Q100 152 114 144" stroke="#5C3A22" strokeWidth="4" fill="none" strokeLinecap="round" />
-    </Svg>
-  );
-}
-
-function Chatula({ size }: PortraitProps) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 200 200">
-      <Circle cx="100" cy="100" r="100" fill="#F0E4FF" />
-      <Polygon points="55,75 70,35 90,70" fill="#E8893F" />
-      <Polygon points="145,75 130,35 110,70" fill="#E8893F" />
-      <Circle cx="100" cy="115" r="58" fill="#F2A35C" />
-      <Path d="M100 115 l-70 -10 M100 115 l-70 10 M100 125 l-70 -5 M100 125 l-70 15 M100 115 l70 -10 M100 115 l70 10 M100 125 l70 -5 M100 125 l70 15" stroke="#fff" strokeWidth="2" opacity="0.6" />
-      <Ellipse cx="85" cy="110" rx="6" ry="9" fill="#2B2118" />
-      <Ellipse cx="115" cy="110" rx="6" ry="9" fill="#2B2118" />
-      <Polygon points="94,128 106,128 100,138" fill="#D9586B" />
-    </Svg>
-  );
-}
-
-// ---------- real people (stylized caricature, not photos) ----------
-
-function Netanyahu({ size }: PortraitProps) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 200 200">
-      <Circle cx="100" cy="100" r="100" fill="#D6E4F0" />
-      <Rect x="55" y="150" width="90" height="40" rx="10" fill="#1F3A5F" />
-      <Path d="M90 150 L100 180 L110 150 Z" fill="#B91C2B" />
-      <Circle cx="100" cy="110" r="52" fill="#E8C49B" />
-      <Path d="M52 95 Q60 55 100 52 Q140 55 148 95 Q130 72 100 70 Q70 72 52 95 Z" fill="#D9D9D9" />
+      <Circle cx="100" cy="100" r="100" fill="#FDEAD2" />
+      <Rect x="65" y="140" width="70" height="36" rx="6" fill="#4A7A9C" />
+      <Circle cx="100" cy="108" r="54" fill="#E8B98A" />
+      <Path d="M48 95 Q54 55 100 52 Q146 55 152 95 Q140 75 100 72 Q60 75 48 95 Z" fill="#6B4226" />
+      <Rect x="55" y="60" width="90" height="18" rx="9" fill="#6B4226" />
       <Ellipse cx="82" cy="112" rx="6" ry="7" fill="#2B2118" />
       <Ellipse cx="118" cy="112" rx="6" ry="7" fill="#2B2118" />
-      <Path d="M86 140 Q100 146 114 140" stroke="#8B4A3A" strokeWidth="4" fill="none" strokeLinecap="round" />
+      <Path d="M78 135 Q100 128 122 135" stroke="#5C3A22" strokeWidth="6" fill="none" strokeLinecap="round" />
     </Svg>
   );
 }
 
-function Herzog({ size }: PortraitProps) {
+function Aladdin({ size }: PortraitProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 200 200">
-      <Circle cx="100" cy="100" r="100" fill="#E8F0E0" />
-      <Rect x="58" y="152" width="84" height="38" rx="10" fill="#2E4A3A" />
-      <Path d="M92 152 L100 178 L108 152 Z" fill="#DBA93B" />
-      <Circle cx="100" cy="110" r="52" fill="#E8C49B" />
-      <Path d="M55 90 Q62 58 100 55 Q138 58 145 90 Q128 75 100 73 Q72 75 55 90 Z" fill="#9C9C9C" />
-      <Path
-        d="M66 108 a12 12 0 1 0 24 0 a12 12 0 1 0 -24 0 M110 108 a12 12 0 1 0 24 0 a12 12 0 1 0 -24 0 M90 108 h10"
-        stroke="#333"
-        strokeWidth="4"
-        fill="none"
-      />
-      <Path d="M86 140 Q100 146 114 140" stroke="#8B4A3A" strokeWidth="4" fill="none" strokeLinecap="round" />
-    </Svg>
-  );
-}
-
-function EdenGolan({ size }: PortraitProps) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 200 200">
-      <Circle cx="100" cy="100" r="100" fill="#FCE4EC" />
-      <Path d="M40 100 Q35 175 55 190 L68 150 Q50 120 55 90 Z M160 100 Q165 175 145 190 L132 150 Q150 120 145 90 Z" fill="#241A14" />
-      <Circle cx="100" cy="112" r="54" fill="#F0C49E" />
-      <Path d="M44 85 Q50 25 100 25 Q150 25 156 85 Q136 55 100 55 Q64 55 44 85 Z" fill="#241A14" />
-      <Ellipse cx="82" cy="112" rx="6" ry="8" fill="#2B2118" />
-      <Ellipse cx="118" cy="112" rx="6" ry="8" fill="#2B2118" />
-      <Path d="M85 142 Q100 152 115 142" stroke="#C0536B" strokeWidth="4" fill="none" strokeLinecap="round" />
-    </Svg>
-  );
-}
-
-function NoaKirel({ size }: PortraitProps) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 200 200">
-      <Circle cx="100" cy="100" r="100" fill="#FFF3D1" />
-      <Path d="M42 95 Q36 165 58 185 L70 145 Q52 115 58 85 Z M158 95 Q164 165 142 185 L130 145 Q148 115 142 85 Z" fill="#E8C14A" />
-      <Circle cx="100" cy="112" r="54" fill="#F3CBA0" />
-      <Path d="M44 85 Q50 24 100 24 Q150 24 156 85 Q138 58 100 58 Q62 58 44 85 Z" fill="#EFCB52" />
-      <Ellipse cx="82" cy="112" rx="6" ry="8" fill="#2B2118" />
-      <Ellipse cx="118" cy="112" rx="6" ry="8" fill="#2B2118" />
-      <Path d="M85 142 Q100 152 115 142" stroke="#C0536B" strokeWidth="4" fill="none" strokeLinecap="round" />
-    </Svg>
-  );
-}
-
-function OmerAdam({ size }: PortraitProps) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 200 200">
-      <Circle cx="100" cy="100" r="100" fill="#DDF4FF" />
-      <Circle cx="100" cy="112" r="54" fill="#E8B98A" />
-      <Path d="M46 88 Q52 28 100 28 Q148 28 154 88 Q136 60 100 60 Q64 60 46 88 Z" fill="#1C1C1C" />
-      <Path d="M80 150 Q100 160 120 150 L118 160 Q100 168 82 160 Z" fill="#3A3A3A" />
-      <Ellipse cx="82" cy="115" rx="6" ry="8" fill="#2B2118" />
-      <Ellipse cx="118" cy="115" rx="6" ry="8" fill="#2B2118" />
-      <Path d="M86 142 Q100 150 114 142" stroke="#8B4A3A" strokeWidth="4" fill="none" strokeLinecap="round" />
-    </Svg>
-  );
-}
-
-function Static({ size }: PortraitProps) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 200 200">
-      <Circle cx="100" cy="100" r="100" fill="#FFE8CC" />
-      <Circle cx="100" cy="112" r="54" fill="#8D5524" />
-      <Circle cx="63" cy="68" r="16" fill="#1C1C1C" />
-      <Circle cx="83" cy="52" r="18" fill="#1C1C1C" />
-      <Circle cx="108" cy="48" r="18" fill="#1C1C1C" />
-      <Circle cx="132" cy="56" r="17" fill="#1C1C1C" />
-      <Circle cx="145" cy="78" r="15" fill="#1C1C1C" />
-      <Path d="M66 110 a16 16 0 1 0 32 0 a16 16 0 1 0 -32 0 M104 110 a16 16 0 1 0 32 0 a16 16 0 1 0 -32 0 M98 110 h4" stroke="#1C1C1C" strokeWidth="4" fill="none" />
-      <Path d="M86 143 Q100 151 114 143" stroke="#4A2E18" strokeWidth="4" fill="none" strokeLinecap="round" />
-    </Svg>
-  );
-}
-
-function BenEl({ size }: PortraitProps) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 200 200">
-      <Circle cx="100" cy="100" r="100" fill="#E3DDFF" />
-      <Circle cx="100" cy="112" r="54" fill="#E0AD7F" />
-      <Path d="M48 90 Q54 30 100 30 Q146 30 152 90 Q134 62 100 62 Q66 62 48 90 Z" fill="#241A14" />
-      <Rect x="78" y="140" width="44" height="12" rx="6" fill="#4A2E18" opacity="0.7" />
-      <Ellipse cx="82" cy="113" rx="6" ry="8" fill="#2B2118" />
-      <Ellipse cx="118" cy="113" rx="6" ry="8" fill="#2B2118" />
+      <Circle cx="100" cy="100" r="100" fill="#D6EFFF" />
+      <Path d="M52 92 Q58 50 100 48 Q142 50 148 92 Q130 68 100 66 Q70 68 52 92 Z" fill="#241A14" />
+      <Path d="M70 155 Q100 170 130 155 L126 180 L74 180 Z" fill="#6D2EB3" />
+      <Rect x="86" y="150" width="28" height="18" fill="#fff" />
+      <Circle cx="100" cy="112" r="52" fill="#E0AD7F" />
+      <Ellipse cx="82" cy="114" rx="6" ry="7" fill="#2B2118" />
+      <Ellipse cx="118" cy="114" rx="6" ry="7" fill="#2B2118" />
       <Path d="M86 142 Q100 149 114 142" stroke="#5C3A22" strokeWidth="4" fill="none" strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+function AnnaFrozen({ size }: PortraitProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 200 200">
+      <Circle cx="100" cy="100" r="100" fill="#BFE3F5" />
+      <Path d="M44 85 Q50 30 100 28 Q150 30 156 85 L150 170 L50 170 Z" fill="#A0522D" />
+      <Path d="M58 110 Q40 140 52 175 L68 165 Q58 135 70 110 Z" fill="#8B3F1A" />
+      <Circle cx="100" cy="112" r="50" fill="#F3CBA0" />
+      <Ellipse cx="82" cy="112" rx="6" ry="8" fill="#3E6B52" />
+      <Ellipse cx="118" cy="112" rx="6" ry="8" fill="#3E6B52" />
+      <Circle cx="70" cy="128" r="5" fill="#D98B8B" opacity="0.7" />
+      <Circle cx="130" cy="128" r="5" fill="#D98B8B" opacity="0.7" />
+      <Path d="M86 142 Q100 150 114 142" stroke="#C0536B" strokeWidth="4" fill="none" strokeLinecap="round" />
+      <Rect x="78" y="168" width="44" height="14" fill="#1F6B4D" />
+    </Svg>
+  );
+}
+
+function Blaze({ size }: PortraitProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 200 200">
+      <Circle cx="100" cy="100" r="100" fill="#FFE1B8" />
+      <Rect x="35" y="95" width="130" height="60" rx="14" fill="#E8352B" />
+      <Rect x="55" y="70" width="90" height="45" rx="10" fill="#F2503F" />
+      <Polygon points="60,70 75,45 110,45 120,70" fill="#F2503F" />
+      <Circle cx="65" cy="160" r="22" fill="#222" />
+      <Circle cx="135" cy="160" r="22" fill="#222" />
+      <Circle cx="65" cy="160" r="9" fill="#888" />
+      <Circle cx="135" cy="160" r="9" fill="#888" />
+      <Ellipse cx="82" cy="90" rx="10" ry="12" fill="#fff" />
+      <Ellipse cx="118" cy="90" rx="10" ry="12" fill="#fff" />
+      <Circle cx="84" cy="92" r="5" fill="#1B2A3A" />
+      <Circle cx="116" cy="92" r="5" fill="#1B2A3A" />
+      <Path d="M75 55 L85 40 L95 55 Z M105 55 L115 40 L125 55 Z" fill="#FFD23F" />
+    </Svg>
+  );
+}
+
+function PawPatrolPup({
+  size,
+  helmet,
+  fur,
+  spots,
+}: PortraitProps & { helmet: string; fur: string; spots?: boolean }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 200 200">
+      <Circle cx="100" cy="100" r="100" fill="#DFF0FF" />
+      <Ellipse cx="60" cy="90" rx="18" ry="26" fill={fur} />
+      <Ellipse cx="140" cy="90" rx="18" ry="26" fill={fur} />
+      <Circle cx="100" cy="115" r="56" fill={fur} />
+      {spots && (
+        <>
+          <Circle cx="78" cy="98" r="7" fill="#2B2118" opacity="0.5" />
+          <Circle cx="128" cy="130" r="8" fill="#2B2118" opacity="0.5" />
+        </>
+      )}
+      <Path d="M48 80 Q100 50 152 80 Q150 55 100 48 Q50 55 48 80 Z" fill={helmet} />
+      <Rect x="46" y="62" width="108" height="22" rx="11" fill={helmet} />
+      <Ellipse cx="100" cy="135" rx="30" ry="22" fill="#fff" />
+      <Circle cx="84" cy="118" r="6" fill="#2B2118" />
+      <Circle cx="116" cy="118" r="6" fill="#2B2118" />
+      <Ellipse cx="100" cy="138" rx="8" ry="6" fill="#2B2118" />
+    </Svg>
+  );
+}
+
+function ChasePawPatrol(p: PortraitProps) {
+  return <PawPatrolPup {...p} helmet="#2563EB" fur="#E8C9A0" />;
+}
+function MarshallPawPatrol(p: PortraitProps) {
+  return <PawPatrolPup {...p} helmet="#DC2626" fur="#fff" spots />;
+}
+function SkyePawPatrol(p: PortraitProps) {
+  return <PawPatrolPup {...p} helmet="#EC4899" fur="#F7E6D0" />;
+}
+
+function IronMan({ size }: PortraitProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 200 200">
+      <Circle cx="100" cy="100" r="100" fill="#FDE2C8" />
+      <Path d="M48 95 Q48 30 100 25 Q152 30 152 95 Q152 150 100 165 Q48 150 48 95 Z" fill="#C8151F" />
+      <Path d="M62 95 Q62 45 100 42 Q138 45 138 95 Q138 135 100 148 Q62 135 62 95 Z" fill="#8A0F17" />
+      <Ellipse cx="82" cy="95" rx="14" ry="10" fill="#FFD23F" />
+      <Ellipse cx="118" cy="95" rx="14" ry="10" fill="#FFD23F" />
+      <Path d="M70 60 Q100 50 130 60 L130 72 Q100 62 70 72 Z" fill="#FFD23F" />
+      <Rect x="90" y="125" width="20" height="16" rx="4" fill="#FFD23F" />
+    </Svg>
+  );
+}
+
+function PeppaPig({ size }: PortraitProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 200 200">
+      <Circle cx="100" cy="100" r="100" fill="#FDE2EC" />
+      <Polygon points="55,65 72,35 85,65" fill="#F2879C" />
+      <Circle cx="100" cy="112" r="56" fill="#F7A8BC" />
+      <Ellipse cx="100" cy="118" rx="28" ry="22" fill="#F2879C" />
+      <Ellipse cx="89" cy="118" rx="6" ry="8" fill="#B9465F" />
+      <Ellipse cx="111" cy="118" rx="6" ry="8" fill="#B9465F" />
+      <Circle cx="78" cy="98" r="7" fill="#2B2118" />
+      <Circle cx="118" cy="92" r="7" fill="#2B2118" />
+      <Path d="M55 150 Q100 165 145 150 L145 170 L55 170 Z" fill="#E8352B" />
+    </Svg>
+  );
+}
+
+function Piglet({ size }: PortraitProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 200 200">
+      <Circle cx="100" cy="100" r="100" fill="#FFE8F0" />
+      <Circle cx="100" cy="110" r="54" fill="#F7B6CB" />
+      <Ellipse cx="60" cy="88" rx="12" ry="16" fill="#F7B6CB" />
+      <Ellipse cx="140" cy="88" rx="12" ry="16" fill="#F7B6CB" />
+      <Ellipse cx="100" cy="118" rx="18" ry="14" fill="#F291AC" />
+      <Ellipse cx="93" cy="118" rx="4" ry="5" fill="#B9465F" />
+      <Ellipse cx="107" cy="118" rx="4" ry="5" fill="#B9465F" />
+      <Circle cx="82" cy="100" r="5" fill="#2B2118" />
+      <Circle cx="118" cy="100" r="5" fill="#2B2118" />
+      <Rect x="70" y="155" width="60" height="22" rx="4" fill="#C9A3D4" />
+      <Rect x="70" y="155" width="60" height="7" fill="#9C6BB0" />
+      <Rect x="70" y="168" width="60" height="7" fill="#9C6BB0" />
+    </Svg>
+  );
+}
+
+function Rapunzel({ size }: PortraitProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 200 200">
+      <Circle cx="100" cy="100" r="100" fill="#FFF4D6" />
+      <Path d="M35 100 Q25 160 45 190 M165 100 Q175 160 155 190" stroke="#E8C14A" strokeWidth="18" fill="none" strokeLinecap="round" />
+      <Circle cx="100" cy="112" r="52" fill="#F3CBA0" />
+      <Path d="M44 85 Q50 24 100 24 Q150 24 156 85 Q138 55 100 55 Q62 55 44 85 Z" fill="#EFCB52" />
+      <Ellipse cx="82" cy="112" rx="6" ry="8" fill="#3E6B9C" />
+      <Ellipse cx="118" cy="112" rx="6" ry="8" fill="#3E6B9C" />
+      <Path d="M85 142 Q100 150 115 142" stroke="#C0536B" strokeWidth="4" fill="none" strokeLinecap="round" />
+      <Rect x="78" y="168" width="44" height="14" fill="#8D4FBF" />
+    </Svg>
+  );
+}
+
+function SpongeBob({ size }: PortraitProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 200 200">
+      <Circle cx="100" cy="100" r="100" fill="#BEE9FF" />
+      <Rect x="40" y="40" width="120" height="120" rx="16" fill="#F2E23B" />
+      <Circle cx="65" cy="65" r="5" fill="#D9C62E" />
+      <Circle cx="135" cy="70" r="6" fill="#D9C62E" />
+      <Circle cx="60" cy="130" r="5" fill="#D9C62E" />
+      <Circle cx="140" cy="135" r="5" fill="#D9C62E" />
+      <Ellipse cx="78" cy="95" rx="18" ry="22" fill="#fff" />
+      <Ellipse cx="124" cy="100" rx="14" ry="18" fill="#fff" />
+      <Circle cx="80" cy="98" r="7" fill="#2B2118" />
+      <Circle cx="124" cy="102" r="6" fill="#2B2118" />
+      <Path d="M70 135 Q100 155 130 130" stroke="#2B2118" strokeWidth="4" fill="none" strokeLinecap="round" />
+      <Rect x="78" y="140" width="44" height="10" fill="#fff" />
+      <Rect x="82" y="148" width="36" height="8" fill="#C8151F" />
+    </Svg>
+  );
+}
+
+function WinnieThePooh({ size }: PortraitProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 200 200">
+      <Circle cx="100" cy="100" r="100" fill="#FFF0D0" />
+      <Ellipse cx="62" cy="75" rx="18" ry="18" fill="#E8B04A" />
+      <Ellipse cx="138" cy="75" rx="18" ry="18" fill="#E8B04A" />
+      <Circle cx="100" cy="112" r="58" fill="#E8B04A" />
+      <Ellipse cx="100" cy="122" rx="32" ry="26" fill="#F7D89A" />
+      <Circle cx="86" cy="108" r="6" fill="#2B2118" />
+      <Circle cx="114" cy="108" r="6" fill="#2B2118" />
+      <Circle cx="100" cy="124" r="7" fill="#2B2118" />
+      <Path d="M85 140 Q100 148 115 140" stroke="#8B5A1A" strokeWidth="4" fill="none" strokeLinecap="round" />
+      <Rect x="58" y="150" width="84" height="34" rx="6" fill="#C8151F" />
     </Svg>
   );
 }
@@ -256,19 +292,21 @@ function Generic({ size }: PortraitProps) {
 export const PORTRAITS: Record<string, React.ComponentType<PortraitProps>> = {
   pucho: Pucho,
   kofiko: Kofiko,
-  chafuzik: Chafuzik,
   shmulikipod: Shmulikipod,
-  buki: Buki,
-  tuki: Tuki,
-  klavlav: Klavlav,
-  chatula: Chatula,
-  netanyahu: Netanyahu,
-  herzog: Herzog,
-  'eden-golan': EdenGolan,
-  'noa-kirel': NoaKirel,
-  'omer-adam': OmerAdam,
-  static: Static,
-  'ben-el': BenEl,
+  'moishe-oofnik': MoisheOofnik,
+  'hanan-hanagar': HananHanagar,
+  aladdin: Aladdin,
+  'anna-frozen': AnnaFrozen,
+  blaze: Blaze,
+  'chase-paw-patrol': ChasePawPatrol,
+  'marshall-paw-patrol': MarshallPawPatrol,
+  'skye-paw-patrol': SkyePawPatrol,
+  'iron-man': IronMan,
+  'peppa-pig': PeppaPig,
+  piglet: Piglet,
+  rapunzel: Rapunzel,
+  spongebob: SpongeBob,
+  'winnie-the-pooh': WinnieThePooh,
 };
 
 export { Generic as GenericPortrait };
