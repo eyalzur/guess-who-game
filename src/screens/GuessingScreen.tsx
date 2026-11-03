@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import BackButton from '../components/BackButton';
 import BigButton from '../components/BigButton';
 import CardBack from '../components/CardBack';
@@ -62,6 +62,9 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
     mode === 'time' ? secondsLeft < TIME_LIMIT_SECONDS : questionsLeft < QUESTIONS_LIMIT;
 
   const requestExit = () => {
+    // idempotent: a second trigger while the dialog is already open (e.g. a
+    // stray browser-back event) must not re-arm the pause clock
+    if (confirmingExit) return;
     if (!roundInProgress) {
       onMenu();
       return;
@@ -80,9 +83,29 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
     setConfirmingExit(false);
   };
 
+  // on web, the browser/Android back gesture bypasses our on-screen back
+  // button entirely (no router involved), which would silently drop an
+  // in-progress round with no confirmation. Trap it with a guard history
+  // entry and route it through the same requestExit() flow.
+  const requestExitRef = useRef(requestExit);
+  requestExitRef.current = requestExit;
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const w = globalThis as any;
+    if (!w.history?.pushState || !w.addEventListener) return;
+    w.history.pushState({ guessingGuard: true }, '');
+    const onPopState = () => {
+      w.history.pushState({ guessingGuard: true }, '');
+      requestExitRef.current();
+    };
+    w.addEventListener('popstate', onPopState);
+    return () => w.removeEventListener('popstate', onPopState);
+  }, []);
+
   return (
     <View style={styles.container}>
-      <BackButton onPress={requestExit} label="עצירת סיבוב" />
+      {!confirmingExit && <BackButton onPress={requestExit} label="עצירת סיבוב" />}
       <View pointerEvents={confirmingExit ? 'none' : 'auto'} style={styles.content}>
         <CardBack size={180} />
 
