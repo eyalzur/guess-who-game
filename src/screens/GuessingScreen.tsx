@@ -23,6 +23,7 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
   const [confirmingExit, setConfirmingExit] = useState(false);
   const finishedRef = useRef(false);
   const startRef = useRef(Date.now());
+  const pauseStartRef = useRef<number | null>(null);
 
   const finish = (outcome: Outcome) => {
     if (finishedRef.current) return;
@@ -30,8 +31,10 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
     onFinish(outcome);
   };
 
+  // the timer only runs while nothing is blocking the round (e.g. the exit
+  // confirmation dialog), so it can never fire out from under that dialog
   useEffect(() => {
-    if (mode !== 'time') return;
+    if (mode !== 'time' || confirmingExit) return;
     const tick = () => {
       const elapsed = Math.floor((Date.now() - startRef.current) / 1000);
       const remaining = Math.max(0, TIME_LIMIT_SECONDS - elapsed);
@@ -40,87 +43,106 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
     };
     const id = setInterval(tick, 250);
     return () => clearInterval(id);
-  }, [mode]);
+  }, [mode, confirmingExit]);
 
   useEffect(() => {
-    if (mode !== 'questions') return;
+    if (mode !== 'questions' || confirmingExit) return;
     if (questionsLeft <= 0) {
       finish('outOfQuestions');
     }
-  }, [mode, questionsLeft]);
+  }, [mode, questionsLeft, confirmingExit]);
+
+  const roundInProgress =
+    mode === 'time' ? secondsLeft < TIME_LIMIT_SECONDS : questionsLeft < QUESTIONS_LIMIT;
 
   const requestExit = () => {
-    if (mode === 'time' || questionsLeft < QUESTIONS_LIMIT) {
-      setConfirmingExit(true);
-    } else {
+    if (!roundInProgress) {
       onMenu();
+      return;
     }
+    pauseStartRef.current = Date.now();
+    setConfirmingExit(true);
+  };
+
+  const resumeRound = () => {
+    if (pauseStartRef.current != null) {
+      // shift the wall-clock start forward by however long the dialog was open,
+      // so the paused time doesn't count against the countdown
+      startRef.current += Date.now() - pauseStartRef.current;
+      pauseStartRef.current = null;
+    }
+    setConfirmingExit(false);
   };
 
   return (
     <View style={styles.container}>
-      {confirmingExit ? (
-        <View style={styles.confirmBox}>
-          <Text style={styles.confirmText}>לצאת באמצע הסיבוב?</Text>
-          <View style={styles.confirmRow}>
-            <BigButton label="כן, לתפריט" onPress={onMenu} color="#DC2626" />
-            <BigButton label="להמשיך לשחק" onPress={() => setConfirmingExit(false)} color="#6B7280" />
-          </View>
-        </View>
-      ) : (
-        <BackButton onPress={requestExit} />
-      )}
-      <CardBack size={180} />
+      <BackButton onPress={requestExit} label="עצירת סיבוב" />
+      <View pointerEvents={confirmingExit ? 'none' : 'auto'} style={styles.content}>
+        <CardBack size={180} />
 
-      {mode === 'time' ? (
-        <>
-          <Text style={[styles.counter, { color: timerColor(secondsLeft) }]}>
-            ⏱️ {secondsLeft}
-          </Text>
-          <View style={styles.progressTrack}>
-            <View
-              style={[
-                styles.progressFill,
-                {
-                  width: `${(secondsLeft / TIME_LIMIT_SECONDS) * 100}%`,
-                  backgroundColor: timerColor(secondsLeft),
-                },
-              ]}
-            />
-          </View>
-        </>
-      ) : (
-        <>
-          <Text style={styles.counter}>❓ נשארו {questionsLeft} שאלות</Text>
-          <View style={styles.dotsRow}>
-            {Array.from({ length: QUESTIONS_LIMIT }).map((_, i) => (
+        {mode === 'time' ? (
+          <>
+            <Text style={[styles.counter, { color: timerColor(secondsLeft) }]}>
+              ⏱️ {secondsLeft}
+            </Text>
+            <View style={styles.progressTrack}>
               <View
-                key={i}
                 style={[
-                  styles.dot,
-                  i < questionsLeft ? styles.dotActive : styles.dotUsed,
+                  styles.progressFill,
+                  {
+                    width: `${(secondsLeft / TIME_LIMIT_SECONDS) * 100}%`,
+                    backgroundColor: timerColor(secondsLeft),
+                  },
                 ]}
               />
-            ))}
-          </View>
-          <BigButton
-            label="נשאלה שאלה"
-            onPress={() => setQuestionsLeft((q) => Math.max(0, q - 1))}
-            color="#F59E0B"
-          />
-        </>
-      )}
+            </View>
+          </>
+        ) : (
+          <>
+            <Text style={styles.counter}>❓ נשארו {questionsLeft} שאלות</Text>
+            <View style={styles.dotsRow}>
+              {Array.from({ length: QUESTIONS_LIMIT }).map((_, i) => (
+                <View
+                  key={i}
+                  style={[
+                    styles.dot,
+                    i < questionsLeft ? styles.dotActive : styles.dotUsed,
+                  ]}
+                />
+              ))}
+            </View>
+            <BigButton
+              label="נשאלה שאלה"
+              onPress={() => setQuestionsLeft((q) => Math.max(0, q - 1))}
+              color="#F59E0B"
+            />
+          </>
+        )}
 
-      <View style={styles.row}>
-        <BigButton label="✅ ניצחון!" onPress={() => finish('win')} color="#16A34A" />
-        <BigButton label="✋ עצור" onPress={() => finish('stop')} color="#DC2626" />
+        <View style={styles.row}>
+          <BigButton label="✅ ניצחון!" onPress={() => finish('win')} color="#16A34A" />
+          <BigButton label="✋ עצור" onPress={() => finish('stop')} color="#DC2626" />
+        </View>
       </View>
+
+      {confirmingExit && (
+        <View style={styles.backdrop}>
+          <View style={styles.confirmBox}>
+            <Text style={styles.confirmText}>לצאת באמצע הסיבוב?</Text>
+            <View style={styles.confirmColumn}>
+              <BigButton label="להמשיך לשחק" onPress={resumeRound} color="#16A34A" />
+              <BigButton label="כן, לתפריט" onPress={onMenu} color="#6B7280" />
+            </View>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
+  content: { alignItems: 'center', justifyContent: 'center' },
   counter: { fontSize: 32, fontWeight: '900', marginVertical: 16 },
   progressTrack: {
     width: 240,
@@ -143,22 +165,29 @@ const styles = StyleSheet.create({
   dotActive: { backgroundColor: '#F59E0B' },
   dotUsed: { backgroundColor: '#E5E7EB' },
   row: { flexDirection: 'row', gap: 12, marginTop: 20, flexWrap: 'wrap', justifyContent: 'center' },
-  confirmBox: {
+  backdrop: {
     position: 'absolute',
-    top: 12,
-    left: 12,
-    right: 12,
-    zIndex: 10,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 20,
+  },
+  confirmBox: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    padding: 16,
+    padding: 20,
     alignItems: 'center',
+    maxWidth: 320,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 6,
   },
-  confirmText: { fontSize: 18, fontWeight: '700', marginBottom: 10 },
-  confirmRow: { flexDirection: 'row', gap: 8, flexWrap: 'wrap', justifyContent: 'center' },
+  confirmText: { fontSize: 18, fontWeight: '700', marginBottom: 10, textAlign: 'center' },
+  confirmColumn: { flexDirection: 'column', alignItems: 'center' },
 });

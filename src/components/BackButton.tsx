@@ -3,14 +3,15 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 
 type Props = {
   onPress: () => void;
+  label?: string;
 };
 
-export default function BackButton({ onPress }: Props) {
+export default function BackButton({ onPress, label = 'חזרה לתפריט' }: Props) {
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel="חזרה לתפריט"
+      accessibilityLabel={label}
       hitSlop={10}
       style={({ pressed }) => [styles.button, { opacity: pressed ? 0.6 : 1 }]}
     >
