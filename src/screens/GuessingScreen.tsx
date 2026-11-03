@@ -20,7 +20,9 @@ function timerColor(secondsLeft: number): string {
 export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
   const [secondsLeft, setSecondsLeft] = useState(TIME_LIMIT_SECONDS);
   const [questionsLeft, setQuestionsLeft] = useState(QUESTIONS_LIMIT);
+  const [confirmingExit, setConfirmingExit] = useState(false);
   const finishedRef = useRef(false);
+  const startRef = useRef(Date.now());
 
   const finish = (outcome: Outcome) => {
     if (finishedRef.current) return;
@@ -30,24 +32,44 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
 
   useEffect(() => {
     if (mode !== 'time') return;
-    if (secondsLeft <= 0) {
-      finish('timeout');
-      return;
-    }
-    const id = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
-    return () => clearTimeout(id);
-  }, [mode, secondsLeft]);
+    const tick = () => {
+      const elapsed = Math.floor((Date.now() - startRef.current) / 1000);
+      const remaining = Math.max(0, TIME_LIMIT_SECONDS - elapsed);
+      setSecondsLeft(remaining);
+      if (remaining <= 0) finish('timeout');
+    };
+    const id = setInterval(tick, 250);
+    return () => clearInterval(id);
+  }, [mode]);
 
   useEffect(() => {
     if (mode !== 'questions') return;
     if (questionsLeft <= 0) {
-      finish('timeout');
+      finish('outOfQuestions');
     }
   }, [mode, questionsLeft]);
 
+  const requestExit = () => {
+    if (mode === 'time' || questionsLeft < QUESTIONS_LIMIT) {
+      setConfirmingExit(true);
+    } else {
+      onMenu();
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <BackButton onPress={onMenu} />
+      {confirmingExit ? (
+        <View style={styles.confirmBox}>
+          <Text style={styles.confirmText}>לצאת באמצע הסיבוב?</Text>
+          <View style={styles.confirmRow}>
+            <BigButton label="כן, לתפריט" onPress={onMenu} color="#DC2626" />
+            <BigButton label="להמשיך לשחק" onPress={() => setConfirmingExit(false)} color="#6B7280" />
+          </View>
+        </View>
+      ) : (
+        <BackButton onPress={requestExit} />
+      )}
       <CardBack size={180} />
 
       {mode === 'time' ? (
@@ -110,7 +132,7 @@ const styles = StyleSheet.create({
   },
   progressFill: { height: '100%', borderRadius: 7 },
   dotsRow: {
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     gap: 8,
@@ -120,5 +142,23 @@ const styles = StyleSheet.create({
   dot: { width: 18, height: 18, borderRadius: 9 },
   dotActive: { backgroundColor: '#F59E0B' },
   dotUsed: { backgroundColor: '#E5E7EB' },
-  row: { flexDirection: 'row-reverse', gap: 12, marginTop: 20, flexWrap: 'wrap', justifyContent: 'center' },
+  row: { flexDirection: 'row', gap: 12, marginTop: 20, flexWrap: 'wrap', justifyContent: 'center' },
+  confirmBox: {
+    position: 'absolute',
+    top: 12,
+    left: 12,
+    right: 12,
+    zIndex: 10,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 6,
+  },
+  confirmText: { fontSize: 18, fontWeight: '700', marginBottom: 10 },
+  confirmRow: { flexDirection: 'row', gap: 8, flexWrap: 'wrap', justifyContent: 'center' },
 });

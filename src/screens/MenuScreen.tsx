@@ -58,20 +58,20 @@ export default function MenuScreen({
         })}
       </View>
       {!canStart && (
-        <View style={styles.warningBox}>
+        <View style={styles.warningBox} accessibilityRole="alert" accessibilityLiveRegion="polite">
           <Text style={styles.warning}>בחרו לפחות קטגוריה אחת כדי להתחיל</Text>
         </View>
       )}
 
       <Text style={styles.subtitle}>איך נשחק?</Text>
       <BigButton
-        label="⏱️ לפי זמן (60 שניות)"
+        label={'⏱️ לפי זמן (60 שניות)'}
         onPress={() => canStart && onSelectMode('time')}
         color={canStart ? '#2563EB' : '#9CA3AF'}
         disabled={!canStart}
       />
       <BigButton
-        label="❓ לפי שאלות (10 שאלות)"
+        label={'❓ לפי שאלות (10 שאלות)'}
         onPress={() => canStart && onSelectMode('questions')}
         color={canStart ? '#059669' : '#9CA3AF'}
         disabled={!canStart}
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
   title: { fontSize: 44, fontWeight: '900', marginBottom: 16, textAlign: 'center' },
   categoryHeader: {
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',

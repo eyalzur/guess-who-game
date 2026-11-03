@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   button: {
     position: 'absolute',
     top: 12,
-    start: 12,
+    right: 12, // app is always RTL, so the reading-start edge is the right
     width: 48,
     height: 48,
     borderRadius: 24,

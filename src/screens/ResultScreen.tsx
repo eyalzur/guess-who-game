@@ -15,7 +15,8 @@ type Props = {
 const OUTCOME_TEXT: Record<Outcome, { title: string; color: string }> = {
   win: { title: 'ניצחת! 🎉🏆', color: '#16A34A' },
   timeout: { title: 'נגמר הזמן... 😅', color: '#DC2626' },
-  stop: { title: 'הפסדת בסיבוב הזה 😊', color: '#DC2626' },
+  outOfQuestions: { title: 'נגמרו השאלות... 😅', color: '#DC2626' },
+  stop: { title: 'לא הצלחתם הפעם, נסו שוב! 🙂', color: '#DC2626' },
 };
 
 export default function ResultScreen({ character, outcome, onNext, onMenu }: Props) {

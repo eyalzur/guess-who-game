@@ -1,11 +1,12 @@
-import React from 'react';
-import { Image, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, View } from 'react-native';
 import type { Character } from '../data/characters';
 import { GenericPortrait, PORTRAITS } from './portraits';
 
 type Props = {
   character: Character;
   size?: number;
+  onLoadEnd?: () => void;
 };
 
 const PHOTOS: Record<string, number> = {
@@ -113,8 +114,15 @@ const PHOTOS: Record<string, number> = {
 
 const ASPECT = 1.25; // vertical rectangle, same for every character
 
-export default function Avatar({ character, size = 180 }: Props) {
+export default function Avatar({ character, size = 180, onLoadEnd }: Props) {
   const photo = PHOTOS[character.id];
+  const [loadedId, setLoadedId] = useState<string | null>(null);
+  const isLoading = photo != null && loadedId !== character.id;
+
+  const handleLoadEnd = () => {
+    setLoadedId(character.id);
+    onLoadEnd?.();
+  };
 
   if (photo) {
     const width = size;
@@ -134,18 +142,40 @@ export default function Avatar({ character, size = 180 }: Props) {
           shadowOpacity: 0.15,
           shadowRadius: 8,
           elevation: 5,
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
         <Image
+          key={character.id}
           source={photo}
-          style={{ width, height }}
+          style={{ width, height, position: 'absolute' }}
           resizeMode="cover"
           accessibilityLabel={character.name}
+          onLoadEnd={handleLoadEnd}
+          onError={handleLoadEnd}
         />
+        {isLoading && <ActivityIndicator size="large" color="#7C3AED" />}
       </View>
     );
   }
 
   const Portrait = PORTRAITS[character.id] ?? GenericPortrait;
+  return <DrawnPortrait Portrait={Portrait} size={size} onLoadEnd={onLoadEnd} />;
+}
+
+// drawn SVG fallback has nothing to wait on, so report "loaded" as soon as it mounts
+function DrawnPortrait({
+  Portrait,
+  size,
+  onLoadEnd,
+}: {
+  Portrait: React.ComponentType<{ size: number }>;
+  size: number;
+  onLoadEnd?: () => void;
+}) {
+  useEffect(() => {
+    onLoadEnd?.();
+  }, [Portrait, onLoadEnd]);
   return <Portrait size={size} />;
 }
