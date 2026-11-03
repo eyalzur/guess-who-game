@@ -5,7 +5,7 @@ import GuessingScreen from './src/screens/GuessingScreen';
 import MenuScreen from './src/screens/MenuScreen';
 import RevealScreen from './src/screens/RevealScreen';
 import ResultScreen from './src/screens/ResultScreen';
-import { ACTIVE_CATEGORIES, randomCharacter } from './src/data/characters';
+import { ACTIVE_CATEGORIES, ALL_CATEGORIES, randomCharacter } from './src/data/characters';
 import type { Character } from './src/data/characters';
 import { GameMode, Outcome, Screen } from './src/game/types';
 
@@ -34,6 +34,9 @@ export default function App() {
     );
   };
 
+  const selectAllCategories = () => setCategories(ALL_CATEGORIES);
+  const clearCategories = () => setCategories([]);
+
   const selectMode = (m: GameMode) => {
     setMode(m);
     setCharacter(randomCharacter(undefined, categories));
@@ -60,13 +63,17 @@ export default function App() {
         <MenuScreen
           selectedCategories={categories}
           onToggleCategory={toggleCategory}
+          onSelectAllCategories={selectAllCategories}
+          onClearCategories={clearCategories}
           onSelectMode={selectMode}
         />
       )}
       {screen === 'reveal' && (
-        <RevealScreen character={character} mode={mode} onStart={startGuessing} />
+        <RevealScreen character={character} mode={mode} onStart={startGuessing} onMenu={backToMenu} />
       )}
-      {screen === 'guessing' && <GuessingScreen mode={mode} onFinish={finishRound} />}
+      {screen === 'guessing' && (
+        <GuessingScreen mode={mode} onFinish={finishRound} onMenu={backToMenu} />
+      )}
       {screen === 'result' && (
         <ResultScreen character={character} outcome={outcome} onNext={nextRound} onMenu={backToMenu} />
       )}

@@ -124,12 +124,24 @@ export default function Avatar({ character, size = 180 }: Props) {
         style={{
           width,
           height,
-          borderRadius: 16,
+          borderRadius: 20,
           overflow: 'hidden',
           backgroundColor: '#FAF5E9',
+          borderWidth: 4,
+          borderColor: '#FFFFFF',
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 8,
+          elevation: 5,
         }}
       >
-        <Image source={photo} style={{ width, height }} resizeMode="cover" />
+        <Image
+          source={photo}
+          style={{ width, height }}
+          resizeMode="cover"
+          accessibilityLabel={character.name}
+        />
       </View>
     );
   }
