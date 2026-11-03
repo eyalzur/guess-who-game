@@ -26,7 +26,9 @@ export default function ResultScreen({ character, outcome, onNext, onMenu }: Pro
     <View style={styles.container}>
       <Text style={[styles.title, { color }]}>{title}</Text>
       <Avatar character={character} size={180} />
-      <Text style={styles.name}>זה היה {character.name}!</Text>
+      <Text style={styles.name}>
+        {character.gender === 'f' ? 'זו הייתה' : 'זה היה'} {character.name}!
+      </Text>
       <BigButton label="➡️ סיבוב הבא" onPress={onNext} color="#7C3AED" />
       <BigButton label="🏠 תפריט" onPress={onMenu} color="#6B7280" />
     </View>

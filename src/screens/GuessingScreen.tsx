@@ -17,6 +17,12 @@ function timerColor(secondsLeft: number): string {
   return '#16A34A';
 }
 
+function questionsLeftText(count: number): string {
+  if (count === 0) return '❓ נגמרו השאלות';
+  if (count === 1) return '❓ נשארה שאלה אחת';
+  return `❓ נשארו ${count} שאלות`;
+}
+
 export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
   const [secondsLeft, setSecondsLeft] = useState(TIME_LIMIT_SECONDS);
   const [questionsLeft, setQuestionsLeft] = useState(QUESTIONS_LIMIT);
@@ -99,7 +105,7 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
           </>
         ) : (
           <>
-            <Text style={styles.counter}>❓ נשארו {questionsLeft} שאלות</Text>
+            <Text style={styles.counter}>{questionsLeftText(questionsLeft)}</Text>
             <View style={styles.dotsRow}>
               {Array.from({ length: QUESTIONS_LIMIT }).map((_, i) => (
                 <View
@@ -112,7 +118,7 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
               ))}
             </View>
             <BigButton
-              label="נשאלה שאלה"
+              label="עוד שאלה"
               onPress={() => setQuestionsLeft((q) => Math.max(0, q - 1))}
               color="#F59E0B"
             />
