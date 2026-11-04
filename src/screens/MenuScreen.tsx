@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import BigButton from '../components/BigButton';
 import { ALL_CATEGORIES, CATEGORY_LABELS, Character } from '../data/characters';
+import { CURRENT_VERSION } from '../data/changelog';
 import { GameMode } from '../game/types';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
   onSelectAllCategories: () => void;
   onClearCategories: () => void;
   onSelectMode: (mode: GameMode) => void;
+  onShowChangelog: () => void;
 };
 
 export default function MenuScreen({
@@ -18,6 +20,7 @@ export default function MenuScreen({
   onSelectAllCategories,
   onClearCategories,
   onSelectMode,
+  onShowChangelog,
 }: Props) {
   const canStart = selectedCategories.length > 0;
   const allSelected = selectedCategories.length === ALL_CATEGORIES.length;
@@ -76,6 +79,10 @@ export default function MenuScreen({
         color={canStart ? '#059669' : '#9CA3AF'}
         disabled={!canStart}
       />
+
+      <Pressable onPress={onShowChangelog} accessibilityRole="button" hitSlop={8} style={styles.versionLink}>
+        <Text style={styles.versionText}>גרסה {CURRENT_VERSION} · מה חדש?</Text>
+      </Pressable>
     </View>
   );
 }
@@ -115,4 +122,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   warning: { color: '#DC2626', fontSize: 14, textAlign: 'center' },
+  versionLink: { marginTop: 20, padding: 8 },
+  versionText: { fontSize: 13, color: '#9CA3AF' },
 });

@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { I18nManager, Platform, SafeAreaView, StyleSheet } from 'react-native';
+import ChangelogScreen from './src/screens/ChangelogScreen';
 import GuessingScreen from './src/screens/GuessingScreen';
 import MenuScreen from './src/screens/MenuScreen';
 import RevealScreen from './src/screens/RevealScreen';
@@ -56,6 +57,7 @@ export default function App() {
   };
 
   const backToMenu = () => setScreen('menu');
+  const showChangelog = () => setScreen('changelog');
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,8 +68,10 @@ export default function App() {
           onSelectAllCategories={selectAllCategories}
           onClearCategories={clearCategories}
           onSelectMode={selectMode}
+          onShowChangelog={showChangelog}
         />
       )}
+      {screen === 'changelog' && <ChangelogScreen onMenu={backToMenu} />}
       {screen === 'reveal' && (
         <RevealScreen character={character} mode={mode} onStart={startGuessing} onMenu={backToMenu} />
       )}

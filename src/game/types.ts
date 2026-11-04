@@ -1,6 +1,6 @@
 export type GameMode = 'time' | 'questions';
 
-export type Screen = 'menu' | 'reveal' | 'guessing' | 'result';
+export type Screen = 'menu' | 'reveal' | 'guessing' | 'result' | 'changelog';
 
 export type Outcome = 'win' | 'timeout' | 'outOfQuestions' | 'stop';
 
