@@ -100,7 +100,12 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
       requestExitRef.current();
     };
     w.addEventListener('popstate', onPopState);
-    return () => w.removeEventListener('popstate', onPopState);
+    return () => {
+      w.removeEventListener('popstate', onPopState);
+      // drop the guard entry we pushed so it doesn't linger in history once
+      // this screen is gone (round finished, or the user confirmed exit)
+      if (w.history.state?.guessingGuard) w.history.back();
+    };
   }, []);
 
   return (
