@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Dimensions, Easing, StyleSheet, View } from 'react-native';
-import { COLORS } from '../theme';
+import { Animated, Dimensions, Easing, StyleSheet, Text, View } from 'react-native';
+import { RAINBOW } from '../theme';
 
-const PIECE_COLORS = [COLORS.pink, COLORS.yellow, COLORS.blue, COLORS.green, COLORS.purple, COLORS.orange];
-const COUNT = 28;
+const EMOJI = ['🎉', '⭐️', '🎊', '✨'];
+const COUNT = 50;
 const { width: SCREEN_W } = Dimensions.get('window');
 
 type Piece = {
@@ -15,18 +15,20 @@ type Piece = {
   size: number;
   color: string;
   drift: number;
+  emoji?: string;
 };
 
 function makePieces(): Piece[] {
-  return Array.from({ length: COUNT }).map(() => ({
-    x: Math.random() * Math.min(SCREEN_W, 420),
-    delay: Math.random() * 250,
-    duration: 1600 + Math.random() * 900,
+  return Array.from({ length: COUNT }).map((_, i) => ({
+    x: Math.random() * Math.min(SCREEN_W, 440),
+    delay: Math.random() * 900,
+    duration: 1800 + Math.random() * 1200,
     rotateStart: Math.random() * 360,
     rotateEnd: Math.random() * 720 - 360,
-    size: 7 + Math.random() * 7,
-    color: PIECE_COLORS[Math.floor(Math.random() * PIECE_COLORS.length)],
-    drift: Math.random() * 60 - 30,
+    size: 8 + Math.random() * 9,
+    color: RAINBOW[Math.floor(Math.random() * RAINBOW.length)],
+    drift: Math.random() * 90 - 45,
+    emoji: i % 6 === 0 ? EMOJI[Math.floor(Math.random() * EMOJI.length)] : undefined,
   }));
 }
 
@@ -43,13 +45,30 @@ function ConfettiPiece({ piece }: { piece: Piece }) {
     }).start();
   }, []);
 
-  const translateY = progress.interpolate({ inputRange: [0, 1], outputRange: [-20, 520] });
+  const translateY = progress.interpolate({ inputRange: [0, 1], outputRange: [-30, 620] });
   const translateX = progress.interpolate({ inputRange: [0, 1], outputRange: [0, piece.drift] });
   const rotate = progress.interpolate({
     inputRange: [0, 1],
     outputRange: [`${piece.rotateStart}deg`, `${piece.rotateStart + piece.rotateEnd}deg`],
   });
   const opacity = progress.interpolate({ inputRange: [0, 0.85, 1], outputRange: [1, 1, 0] });
+
+  if (piece.emoji) {
+    return (
+      <Animated.Text
+        style={{
+          position: 'absolute',
+          left: piece.x,
+          top: 0,
+          fontSize: piece.size * 1.8,
+          opacity,
+          transform: [{ translateY }, { translateX }, { rotate }],
+        }}
+      >
+        {piece.emoji}
+      </Animated.Text>
+    );
+  }
 
   return (
     <Animated.View

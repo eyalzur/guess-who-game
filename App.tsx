@@ -2,8 +2,8 @@ import { Heebo_400Regular, Heebo_600SemiBold, Heebo_700Bold } from '@expo-google
 import { Rubik_800ExtraBold, Rubik_900Black } from '@expo-google-fonts/rubik';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { I18nManager, Platform, SafeAreaView, StyleSheet } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, I18nManager, Platform, SafeAreaView, StyleSheet } from 'react-native';
 import ChangelogScreen from './src/screens/ChangelogScreen';
 import GuessingScreen from './src/screens/GuessingScreen';
 import MenuScreen from './src/screens/MenuScreen';
@@ -69,10 +69,17 @@ export default function App() {
   const backToMenu = () => setScreen('menu');
   const showChangelog = () => setScreen('changelog');
 
+  const fade = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    fade.setValue(0);
+    Animated.timing(fade, { toValue: 1, duration: 260, useNativeDriver: true }).start();
+  }, [screen]);
+
   if (!fontsLoaded) return null;
 
   return (
     <SafeAreaView style={styles.container}>
+      <Animated.View style={[styles.fade, { opacity: fade }]}>
       {screen === 'menu' && (
         <MenuScreen
           selectedCategories={categories}
@@ -93,6 +100,7 @@ export default function App() {
       {screen === 'result' && (
         <ResultScreen character={character} outcome={outcome} onNext={nextRound} onMenu={backToMenu} />
       )}
+      </Animated.View>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
@@ -103,4 +111,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF3D6',
   },
+  fade: { flex: 1 },
 });

@@ -2,11 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import BackButton from '../components/BackButton';
 import BigButton from '../components/BigButton';
+import Bob from '../components/Bob';
 import CardBack from '../components/CardBack';
 import ScreenBackground from '../components/ScreenBackground';
 import TimerRing from '../components/TimerRing';
 import { GameMode, Outcome, QUESTIONS_LIMIT, TIME_LIMIT_SECONDS } from '../game/types';
-import { COLORS, FONTS, RADIUS } from '../theme';
+import { COLORS, FONTS, GRADIENT_GUESS, RADIUS } from '../theme';
 
 type Props = {
   mode: GameMode;
@@ -112,14 +113,21 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
   }, []);
 
   return (
-    <ScreenBackground>
+    <ScreenBackground colors={GRADIENT_GUESS}>
       {!confirmingExit && <BackButton onPress={requestExit} label="עצירת סיבוב" />}
       <View pointerEvents={confirmingExit ? 'none' : 'auto'} style={styles.content}>
-        <CardBack size={160} />
+        <Bob>
+          <CardBack size={160} />
+        </Bob>
 
         {mode === 'time' ? (
           <View style={styles.ringWrap}>
-            <TimerRing secondsLeft={secondsLeft} totalSeconds={TIME_LIMIT_SECONDS} color={timerColor(secondsLeft)} />
+            <TimerRing
+              secondsLeft={secondsLeft}
+              totalSeconds={TIME_LIMIT_SECONDS}
+              color={timerColor(secondsLeft)}
+              urgent={secondsLeft <= 10 && secondsLeft > 0}
+            />
           </View>
         ) : (
           <>
@@ -144,7 +152,7 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
         )}
 
         <View style={styles.row}>
-          <BigButton label="✅ ניצחון!" onPress={() => finish('win')} color={COLORS.green} />
+          <BigButton label="✅ ניצחון!" onPress={() => finish('win')} color={COLORS.green} pulse />
           <BigButton label="✋ עצור" onPress={() => finish('stop')} color={COLORS.red} />
         </View>
       </View>

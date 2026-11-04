@@ -3,10 +3,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import Avatar from '../components/Avatar';
 import BackButton from '../components/BackButton';
 import BigButton from '../components/BigButton';
+import BounceIn from '../components/BounceIn';
 import ScreenBackground from '../components/ScreenBackground';
 import type { Character } from '../data/characters';
 import { GameMode } from '../game/types';
-import { COLORS, FONTS, RADIUS } from '../theme';
+import { COLORS, FONTS, GRADIENT_REVEAL, RADIUS } from '../theme';
 
 type Props = {
   character: Character;
@@ -24,12 +25,14 @@ export default function RevealScreen({ character, mode, onStart, onMenu }: Props
   }, [character.id]);
 
   return (
-    <ScreenBackground>
+    <ScreenBackground colors={GRADIENT_REVEAL}>
       <BackButton onPress={onMenu} />
       <View style={styles.hintBubble}>
         <Text style={styles.hint}>תראו למנחש/ת... ואז תסתירו! 🙈</Text>
       </View>
-      <Avatar character={character} size={220} onLoadEnd={() => setPhotoReady(true)} />
+      <BounceIn key={character.id}>
+        <Avatar character={character} size={220} onLoadEnd={() => setPhotoReady(true)} />
+      </BounceIn>
       <Text style={styles.name}>{character.name}</Text>
       <View style={styles.modeBadge}>
         <Text style={styles.modeBadgeText}>
@@ -41,6 +44,7 @@ export default function RevealScreen({ character, mode, onStart, onMenu }: Props
         onPress={onStart}
         color={COLORS.pink}
         disabled={!photoReady}
+        pulse={photoReady}
       />
     </ScreenBackground>
   );

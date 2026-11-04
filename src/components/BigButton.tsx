@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Easing, Pressable, StyleSheet, Text, View } from 'react-native';
 import { COLORS, FONTS, RADIUS } from '../theme';
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
   textColor?: string;
   disabled?: boolean;
   size?: 'md' | 'lg';
+  pulse?: boolean;
 };
 
 const PRESS_DEPTH = 6;
@@ -31,13 +32,40 @@ export default function BigButton({
   textColor = COLORS.white,
   disabled = false,
   size = 'lg',
+  pulse = false,
 }: Props) {
   const translateY = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(1)).current;
   const resolvedShadow = shadowColor ?? darken(color);
 
   const animateTo = (toValue: number) => {
     Animated.timing(translateY, { toValue, duration: 90, useNativeDriver: true }).start();
   };
+
+  useEffect(() => {
+    if (!pulse || disabled) {
+      scale.setValue(1);
+      return;
+    }
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(scale, {
+          toValue: 1.045,
+          duration: 620,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: 620,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [pulse, disabled]);
 
   const sizeStyle = size === 'lg' ? styles.lg : styles.md;
 
@@ -66,7 +94,7 @@ export default function BigButton({
           {
             backgroundColor: disabled ? COLORS.gray : color,
             opacity: disabled ? 0.75 : 1,
-            transform: [{ translateY }],
+            transform: [{ translateY }, { scale }],
           },
         ]}
       >

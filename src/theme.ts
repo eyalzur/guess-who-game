@@ -30,8 +30,17 @@ export const COLORS = {
   cardSurface: '#FFFFFF',
 } as const;
 
-// background gradient stops, shared by every screen for a consistent feel
-export const BACKGROUND_GRADIENT = ['#FFF3D6', '#FFD9EC', '#E4DBFF'] as const;
+// background gradient stops — bold and saturated, one flavor per screen so
+// the app reads as a game (lots of color) rather than a muted "app" look
+export const BACKGROUND_GRADIENT = ['#FFE566', '#FF8FD6', '#8B5CF6'] as const;
+export const GRADIENT_MENU = ['#FFE566', '#FF8FD6', '#8B5CF6'] as const;
+export const GRADIENT_REVEAL = ['#5CE1E6', '#3DA9FC', '#8B5CF6'] as const;
+export const GRADIENT_GUESS = ['#FFB199', '#FF4FA3', '#8B5CF6'] as const;
+export const GRADIENT_WIN = ['#FFE566', '#7CF29C', '#22C3EE'] as const;
+export const GRADIENT_LOSE = ['#FFB199', '#FF8FD6', '#8B5CF6'] as const;
+
+// confetti / decoration accent rainbow
+export const RAINBOW = ['#FF4FA3', '#FFC93C', '#22C3EE', '#2ED573', '#8B5CF6', '#FF8C42'] as const;
 
 export const FONTS = {
   display: 'Rubik_900Black',

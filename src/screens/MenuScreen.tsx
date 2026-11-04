@@ -1,11 +1,12 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import BigButton from '../components/BigButton';
+import BounceIn from '../components/BounceIn';
 import ScreenBackground from '../components/ScreenBackground';
 import { ALL_CATEGORIES, CATEGORY_LABELS, Character } from '../data/characters';
 import { CURRENT_VERSION } from '../data/changelog';
 import { GameMode } from '../game/types';
-import { COLORS, FONTS, RADIUS } from '../theme';
+import { COLORS, FONTS, GRADIENT_MENU, RADIUS } from '../theme';
 
 type Props = {
   selectedCategories: Character['category'][];
@@ -44,11 +45,11 @@ export default function MenuScreen({
   const allSelected = selectedCategories.length === ALL_CATEGORIES.length;
 
   return (
-    <ScreenBackground>
-      <View style={styles.titleWrap}>
+    <ScreenBackground colors={GRADIENT_MENU}>
+      <BounceIn style={styles.titleWrap}>
         <Text style={styles.titleEmoji}>🎉</Text>
         <Text style={styles.title}>מי זה?</Text>
-      </View>
+      </BounceIn>
 
       <View style={styles.categoryHeader}>
         <Text style={styles.subtitle}>אילו קטגוריות?</Text>
@@ -62,28 +63,29 @@ export default function MenuScreen({
       </View>
 
       <View style={styles.chipsRow}>
-        {ALL_CATEGORIES.map((cat) => {
+        {ALL_CATEGORIES.map((cat, i) => {
           const selected = selectedCategories.includes(cat);
           const chipColor = CHIP_COLORS[cat];
           return (
-            <Pressable
-              key={cat}
-              onPress={() => onToggleCategory(cat)}
-              accessibilityRole="checkbox"
-              accessibilityState={{ checked: selected }}
-              accessibilityLabel={CATEGORY_LABELS[cat]}
-              style={[
-                styles.chip,
-                selected
-                  ? { backgroundColor: chipColor, borderColor: chipColor }
-                  : styles.chipUnselected,
-              ]}
-            >
-              <Text style={styles.chipEmoji}>{CATEGORY_ICON[cat]}</Text>
-              <Text style={[styles.chipText, selected && styles.chipTextSelected]}>
-                {CATEGORY_LABELS[cat]}
-              </Text>
-            </Pressable>
+            <BounceIn key={cat} delay={80 + i * 60}>
+              <Pressable
+                onPress={() => onToggleCategory(cat)}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: selected }}
+                accessibilityLabel={CATEGORY_LABELS[cat]}
+                style={[
+                  styles.chip,
+                  selected
+                    ? { backgroundColor: chipColor, borderColor: chipColor }
+                    : styles.chipUnselected,
+                ]}
+              >
+                <Text style={styles.chipEmoji}>{CATEGORY_ICON[cat]}</Text>
+                <Text style={[styles.chipText, selected && styles.chipTextSelected]}>
+                  {CATEGORY_LABELS[cat]}
+                </Text>
+              </Pressable>
+            </BounceIn>
           );
         })}
       </View>
@@ -99,12 +101,14 @@ export default function MenuScreen({
         onPress={() => canStart && onSelectMode('time')}
         color={COLORS.blue}
         disabled={!canStart}
+        pulse={canStart}
       />
       <BigButton
         label={'❓ לפי שאלות (10 שאלות)'}
         onPress={() => canStart && onSelectMode('questions')}
         color={COLORS.green}
         disabled={!canStart}
+        pulse={canStart}
       />
 
       <Pressable onPress={onShowChangelog} accessibilityRole="button" hitSlop={8} style={styles.versionLink}>
