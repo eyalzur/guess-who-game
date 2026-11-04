@@ -3,7 +3,10 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import BackButton from '../components/BackButton';
 import BigButton from '../components/BigButton';
 import CardBack from '../components/CardBack';
+import ScreenBackground from '../components/ScreenBackground';
+import TimerRing from '../components/TimerRing';
 import { GameMode, Outcome, QUESTIONS_LIMIT, TIME_LIMIT_SECONDS } from '../game/types';
+import { COLORS, FONTS, RADIUS } from '../theme';
 
 type Props = {
   mode: GameMode;
@@ -12,9 +15,9 @@ type Props = {
 };
 
 function timerColor(secondsLeft: number): string {
-  if (secondsLeft <= 10) return '#DC2626';
-  if (secondsLeft <= 30) return '#F59E0B';
-  return '#16A34A';
+  if (secondsLeft <= 10) return COLORS.red;
+  if (secondsLeft <= 30) return COLORS.orange;
+  return COLORS.green;
 }
 
 function questionsLeftText(count: number): string {
@@ -109,28 +112,15 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScreenBackground>
       {!confirmingExit && <BackButton onPress={requestExit} label="עצירת סיבוב" />}
       <View pointerEvents={confirmingExit ? 'none' : 'auto'} style={styles.content}>
-        <CardBack size={180} />
+        <CardBack size={160} />
 
         {mode === 'time' ? (
-          <>
-            <Text style={[styles.counter, { color: timerColor(secondsLeft) }]}>
-              ⏱️ {secondsLeft}
-            </Text>
-            <View style={styles.progressTrack}>
-              <View
-                style={[
-                  styles.progressFill,
-                  {
-                    width: `${(secondsLeft / TIME_LIMIT_SECONDS) * 100}%`,
-                    backgroundColor: timerColor(secondsLeft),
-                  },
-                ]}
-              />
-            </View>
-          </>
+          <View style={styles.ringWrap}>
+            <TimerRing secondsLeft={secondsLeft} totalSeconds={TIME_LIMIT_SECONDS} color={timerColor(secondsLeft)} />
+          </View>
         ) : (
           <>
             <Text style={styles.counter}>{questionsLeftText(questionsLeft)}</Text>
@@ -148,45 +138,43 @@ export default function GuessingScreen({ mode, onFinish, onMenu }: Props) {
             <BigButton
               label="עוד שאלה"
               onPress={() => setQuestionsLeft((q) => Math.max(0, q - 1))}
-              color="#F59E0B"
+              color={COLORS.orange}
             />
           </>
         )}
 
         <View style={styles.row}>
-          <BigButton label="✅ ניצחון!" onPress={() => finish('win')} color="#16A34A" />
-          <BigButton label="✋ עצור" onPress={() => finish('stop')} color="#DC2626" />
+          <BigButton label="✅ ניצחון!" onPress={() => finish('win')} color={COLORS.green} />
+          <BigButton label="✋ עצור" onPress={() => finish('stop')} color={COLORS.red} />
         </View>
       </View>
 
       {confirmingExit && (
         <View style={styles.backdrop}>
           <View style={styles.confirmBox}>
+            <Text style={styles.confirmEmoji}>🤔</Text>
             <Text style={styles.confirmText}>לצאת באמצע הסיבוב?</Text>
             <View style={styles.confirmColumn}>
-              <BigButton label="להמשיך לשחק" onPress={resumeRound} color="#16A34A" />
-              <BigButton label="כן, לתפריט" onPress={onMenu} color="#6B7280" />
+              <BigButton label="להמשיך לשחק" onPress={resumeRound} color={COLORS.green} />
+              <BigButton label="כן, לתפריט" onPress={onMenu} color={COLORS.gray} />
             </View>
           </View>
         </View>
       )}
-    </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
   content: { alignItems: 'center', justifyContent: 'center' },
-  counter: { fontSize: 32, fontWeight: '900', marginVertical: 16 },
-  progressTrack: {
-    width: 240,
-    height: 14,
-    borderRadius: 7,
-    backgroundColor: '#E5E7EB',
-    overflow: 'hidden',
-    marginBottom: 8,
+  ringWrap: { marginVertical: 12 },
+  counter: {
+    fontSize: 26,
+    fontFamily: FONTS.displayBold,
+    color: COLORS.ink,
+    marginVertical: 16,
+    textAlign: 'center',
   },
-  progressFill: { height: '100%', borderRadius: 7 },
   dotsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -196,8 +184,8 @@ const styles = StyleSheet.create({
     maxWidth: 260,
   },
   dot: { width: 18, height: 18, borderRadius: 9 },
-  dotActive: { backgroundColor: '#F59E0B' },
-  dotUsed: { backgroundColor: '#E5E7EB' },
+  dotActive: { backgroundColor: COLORS.orange },
+  dotUsed: { backgroundColor: COLORS.grayLight },
   row: { flexDirection: 'row', gap: 12, marginTop: 20, flexWrap: 'wrap', justifyContent: 'center' },
   backdrop: {
     position: 'absolute',
@@ -205,23 +193,30 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: 'rgba(43,34,80,0.45)',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 20,
   },
   confirmBox: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
+    backgroundColor: COLORS.white,
+    borderRadius: RADIUS.lg,
+    padding: 24,
     alignItems: 'center',
     maxWidth: 320,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 8,
   },
-  confirmText: { fontSize: 18, fontWeight: '700', marginBottom: 10, textAlign: 'center' },
+  confirmEmoji: { fontSize: 36, marginBottom: 4 },
+  confirmText: {
+    fontSize: 19,
+    fontFamily: FONTS.bodyBold,
+    marginBottom: 14,
+    textAlign: 'center',
+    color: COLORS.ink,
+  },
   confirmColumn: { flexDirection: 'column', alignItems: 'center' },
 });

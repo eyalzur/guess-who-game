@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, View } from 'react-native';
 import type { Character } from '../data/characters';
+import { COLORS } from '../theme';
 import { GenericPortrait, PORTRAITS } from './portraits';
+
+const FRAME_COLORS = [COLORS.pink, COLORS.blue, COLORS.green, COLORS.orange, COLORS.purple, COLORS.yellow];
+
+function frameColorFor(id: string): string {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  return FRAME_COLORS[hash % FRAME_COLORS.length];
+}
 
 type Props = {
   character: Character;
@@ -127,35 +136,45 @@ export default function Avatar({ character, size = 180, onLoadEnd }: Props) {
   if (photo) {
     const width = size;
     const height = size * ASPECT;
+    const frameColor = frameColorFor(character.id);
+    const pad = 10;
     return (
       <View
         style={{
-          width,
-          height,
-          borderRadius: 20,
-          overflow: 'hidden',
-          backgroundColor: '#FAF5E9',
-          borderWidth: 4,
-          borderColor: '#FFFFFF',
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.15,
-          shadowRadius: 8,
-          elevation: 5,
-          alignItems: 'center',
-          justifyContent: 'center',
+          width: width + pad * 2,
+          height: height + pad * 2,
+          borderRadius: 28,
+          backgroundColor: frameColor,
+          padding: pad,
+          shadowColor: '#5B3DA6',
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.22,
+          shadowRadius: 14,
+          elevation: 8,
         }}
       >
-        <Image
-          key={character.id}
-          source={photo}
-          style={{ width, height, position: 'absolute' }}
-          resizeMode="cover"
-          accessibilityLabel={character.name}
-          onLoadEnd={handleLoadEnd}
-          onError={handleLoadEnd}
-        />
-        {isLoading && <ActivityIndicator size="large" color="#7C3AED" />}
+        <View
+          style={{
+            width,
+            height,
+            borderRadius: 18,
+            overflow: 'hidden',
+            backgroundColor: '#FAF5E9',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Image
+            key={character.id}
+            source={photo}
+            style={{ width, height, position: 'absolute' }}
+            resizeMode="cover"
+            accessibilityLabel={character.name}
+            onLoadEnd={handleLoadEnd}
+            onError={handleLoadEnd}
+          />
+          {isLoading && <ActivityIndicator size="large" color={frameColor} />}
+        </View>
       </View>
     );
   }

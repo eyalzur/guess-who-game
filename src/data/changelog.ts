@@ -7,6 +7,17 @@ export type ChangelogEntry = {
 // Newest first. Bump app.json's "version" field together with a new entry here.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.2.0',
+    date: '2026-11-04',
+    changes: [
+      'עיצוב חדש לגמרי: "קרנבל ממתקים" — צבעים עליזים, כפתורים עבים ותלת-ממדיים, רקע גרדיאנט רך',
+      'פונטים חדשים ויפים (Heebo + Rubik) שתומכים בעברית מכל הלב',
+      'קונפטי חוגג כשמנצחים!',
+      'שעון עצר עגול וצבעוני במקום פס התקדמות',
+      'כרטיסי דמויות עם מסגרת צבעונית וצל, בסגנון מדבקה',
+    ],
+  },
+  {
     version: '1.1.0',
     date: '2026-11-04',
     changes: [

@@ -1,7 +1,9 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import BigButton from '../components/BigButton';
+import ScreenBackground from '../components/ScreenBackground';
 import { CHANGELOG } from '../data/changelog';
+import { COLORS, FONTS, RADIUS } from '../theme';
 
 type Props = {
   onMenu: () => void;
@@ -9,7 +11,7 @@ type Props = {
 
 export default function ChangelogScreen({ onMenu }: Props) {
   return (
-    <View style={styles.container}>
+    <ScreenBackground style={styles.container}>
       <Text style={styles.title}>מה חדש? 🆕</Text>
       <ScrollView style={styles.list} contentContainerStyle={styles.listContent}>
         {CHANGELOG.map((entry) => (
@@ -26,26 +28,26 @@ export default function ChangelogScreen({ onMenu }: Props) {
           </View>
         ))}
       </ScrollView>
-      <BigButton label="🏠 תפריט" onPress={onMenu} color="#6B7280" />
-    </View>
+      <BigButton label="🏠 תפריט" onPress={onMenu} color={COLORS.gray} />
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', padding: 24, paddingTop: 48 },
-  title: { fontSize: 34, fontWeight: '900', marginBottom: 16, textAlign: 'center' },
+  container: { justifyContent: 'flex-start', paddingTop: 48 },
+  title: { fontSize: 32, fontFamily: FONTS.display, color: COLORS.ink, marginBottom: 16, textAlign: 'center' },
   list: { width: '100%', maxWidth: 420, flexGrow: 0 },
   listContent: { paddingBottom: 16 },
   entry: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    backgroundColor: COLORS.white,
+    borderRadius: RADIUS.md,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowColor: '#5B3DA6',
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 6,
+    elevation: 3,
   },
   entryHeader: {
     flexDirection: 'row',
@@ -53,7 +55,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
-  version: { fontSize: 18, fontWeight: '800', color: '#7C3AED' },
-  date: { fontSize: 13, color: '#9CA3AF' },
-  change: { fontSize: 15, color: '#374151', textAlign: 'right', marginBottom: 4, lineHeight: 20 },
+  version: { fontSize: 18, fontFamily: FONTS.displayBold, color: COLORS.purple },
+  date: { fontSize: 13, color: COLORS.gray, fontFamily: FONTS.body },
+  change: {
+    fontSize: 15,
+    color: COLORS.inkSoft,
+    fontFamily: FONTS.body,
+    textAlign: 'right',
+    marginBottom: 4,
+    lineHeight: 20,
+  },
 });

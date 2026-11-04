@@ -3,8 +3,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import Avatar from '../components/Avatar';
 import BackButton from '../components/BackButton';
 import BigButton from '../components/BigButton';
+import ScreenBackground from '../components/ScreenBackground';
 import type { Character } from '../data/characters';
 import { GameMode } from '../game/types';
+import { COLORS, FONTS, RADIUS } from '../theme';
 
 type Props = {
   character: Character;
@@ -22,9 +24,11 @@ export default function RevealScreen({ character, mode, onStart, onMenu }: Props
   }, [character.id]);
 
   return (
-    <View style={styles.container}>
+    <ScreenBackground>
       <BackButton onPress={onMenu} />
-      <Text style={styles.hint}>תראו למנחש/ת... ואז תסתירו!</Text>
+      <View style={styles.hintBubble}>
+        <Text style={styles.hint}>תראו למנחש/ת... ואז תסתירו! 🙈</Text>
+      </View>
       <Avatar character={character} size={220} onLoadEnd={() => setPhotoReady(true)} />
       <Text style={styles.name}>{character.name}</Text>
       <View style={styles.modeBadge}>
@@ -35,23 +39,40 @@ export default function RevealScreen({ character, mode, onStart, onMenu }: Props
       <BigButton
         label={photoReady ? 'התחל! 🚀' : 'טוען תמונה...'}
         onPress={onStart}
-        color="#DB2777"
+        color={COLORS.pink}
         disabled={!photoReady}
       />
-    </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-  hint: { fontSize: 18, color: '#555', marginBottom: 12, textAlign: 'center' },
-  name: { fontSize: 38, fontWeight: '900', marginTop: 16, textAlign: 'center' },
+  hintBubble: {
+    backgroundColor: COLORS.white,
+    borderRadius: RADIUS.pill,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    marginBottom: 18,
+    shadowColor: '#5B3DA6',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  hint: { fontSize: 16, color: COLORS.inkSoft, fontFamily: FONTS.bodyMedium, textAlign: 'center' },
+  name: {
+    fontSize: 36,
+    fontFamily: FONTS.display,
+    marginTop: 20,
+    textAlign: 'center',
+    color: COLORS.ink,
+  },
   modeBadge: {
-    backgroundColor: '#FDE68A',
-    paddingHorizontal: 16,
+    backgroundColor: COLORS.yellow,
+    paddingHorizontal: 18,
     paddingVertical: 8,
-    borderRadius: 999,
+    borderRadius: RADIUS.pill,
     marginVertical: 14,
   },
-  modeBadgeText: { fontSize: 16, fontWeight: '700', color: '#92400E' },
+  modeBadgeText: { fontSize: 15, fontFamily: FONTS.bodyBold, color: '#7A4B00' },
 });

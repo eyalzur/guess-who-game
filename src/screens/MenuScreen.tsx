@@ -1,9 +1,11 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import BigButton from '../components/BigButton';
+import ScreenBackground from '../components/ScreenBackground';
 import { ALL_CATEGORIES, CATEGORY_LABELS, Character } from '../data/characters';
 import { CURRENT_VERSION } from '../data/changelog';
 import { GameMode } from '../game/types';
+import { COLORS, FONTS, RADIUS } from '../theme';
 
 type Props = {
   selectedCategories: Character['category'][];
@@ -12,6 +14,22 @@ type Props = {
   onClearCategories: () => void;
   onSelectMode: (mode: GameMode) => void;
   onShowChangelog: () => void;
+};
+
+const CATEGORY_ICON: Record<Character['category'], string> = {
+  'il-character': '🇮🇱',
+  'intl-character': '🎬',
+  cartoon: '🧸',
+  singer: '🎤',
+  politician: '🏛️',
+};
+
+const CHIP_COLORS: Record<Character['category'], string> = {
+  'il-character': COLORS.blue,
+  'intl-character': COLORS.purple,
+  cartoon: COLORS.pink,
+  singer: COLORS.orange,
+  politician: COLORS.green,
 };
 
 export default function MenuScreen({
@@ -26,8 +44,11 @@ export default function MenuScreen({
   const allSelected = selectedCategories.length === ALL_CATEGORIES.length;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>מי זה? 🎉</Text>
+    <ScreenBackground>
+      <View style={styles.titleWrap}>
+        <Text style={styles.titleEmoji}>🎉</Text>
+        <Text style={styles.title}>מי זה?</Text>
+      </View>
 
       <View style={styles.categoryHeader}>
         <Text style={styles.subtitle}>אילו קטגוריות?</Text>
@@ -43,6 +64,7 @@ export default function MenuScreen({
       <View style={styles.chipsRow}>
         {ALL_CATEGORIES.map((cat) => {
           const selected = selectedCategories.includes(cat);
+          const chipColor = CHIP_COLORS[cat];
           return (
             <Pressable
               key={cat}
@@ -50,10 +72,15 @@ export default function MenuScreen({
               accessibilityRole="checkbox"
               accessibilityState={{ checked: selected }}
               accessibilityLabel={CATEGORY_LABELS[cat]}
-              style={[styles.chip, selected ? styles.chipSelected : styles.chipUnselected]}
+              style={[
+                styles.chip,
+                selected
+                  ? { backgroundColor: chipColor, borderColor: chipColor }
+                  : styles.chipUnselected,
+              ]}
             >
+              <Text style={styles.chipEmoji}>{CATEGORY_ICON[cat]}</Text>
               <Text style={[styles.chipText, selected && styles.chipTextSelected]}>
-                {selected ? '✓ ' : ''}
                 {CATEGORY_LABELS[cat]}
               </Text>
             </Pressable>
@@ -70,58 +97,76 @@ export default function MenuScreen({
       <BigButton
         label={'⏱️ לפי זמן (60 שניות)'}
         onPress={() => canStart && onSelectMode('time')}
-        color={canStart ? '#2563EB' : '#9CA3AF'}
+        color={COLORS.blue}
         disabled={!canStart}
       />
       <BigButton
         label={'❓ לפי שאלות (10 שאלות)'}
         onPress={() => canStart && onSelectMode('questions')}
-        color={canStart ? '#059669' : '#9CA3AF'}
+        color={COLORS.green}
         disabled={!canStart}
       />
 
       <Pressable onPress={onShowChangelog} accessibilityRole="button" hitSlop={8} style={styles.versionLink}>
         <Text style={styles.versionText}>גרסה {CURRENT_VERSION} · מה חדש?</Text>
       </Pressable>
-    </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-  title: { fontSize: 44, fontWeight: '900', marginBottom: 16, textAlign: 'center' },
+  titleWrap: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 18 },
+  titleEmoji: { fontSize: 38 },
+  title: { fontSize: 46, fontFamily: FONTS.display, color: COLORS.ink, textAlign: 'center' },
   categoryHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    maxWidth: 320,
+    maxWidth: 340,
   },
-  subtitle: { fontSize: 22, marginTop: 8, marginBottom: 12, color: '#444', textAlign: 'center' },
-  quickAction: { fontSize: 15, color: '#2563EB', fontWeight: '700' },
-  chipsRow: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 8 },
+  subtitle: {
+    fontSize: 20,
+    marginTop: 10,
+    marginBottom: 12,
+    color: COLORS.inkSoft,
+    fontFamily: FONTS.bodyBold,
+    textAlign: 'center',
+  },
+  quickAction: { fontSize: 15, color: COLORS.purple, fontFamily: FONTS.bodyBold },
+  chipsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 10,
+    marginBottom: 8,
+    maxWidth: 360,
+  },
   chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    borderRadius: 20,
+    borderRadius: RADIUS.pill,
     borderWidth: 2,
     minHeight: 44,
     justifyContent: 'center',
   },
-  chipSelected: { backgroundColor: '#2563EB', borderColor: '#2563EB' },
-  chipUnselected: { backgroundColor: '#FFF', borderColor: '#D1D5DB' },
-  chipText: { fontSize: 16, color: '#374151', fontWeight: '600' },
-  chipTextSelected: { color: '#FFF' },
+  chipUnselected: { backgroundColor: COLORS.white, borderColor: COLORS.grayLight },
+  chipEmoji: { fontSize: 16 },
+  chipText: { fontSize: 15, color: COLORS.inkSoft, fontFamily: FONTS.bodyBold },
+  chipTextSelected: { color: COLORS.white },
   warningBox: {
-    backgroundColor: '#FEF2F2',
-    borderColor: '#FCA5A5',
-    borderWidth: 1,
-    borderRadius: 10,
+    backgroundColor: '#FFE4E7',
+    borderColor: COLORS.red,
+    borderWidth: 1.5,
+    borderRadius: RADIUS.sm,
     paddingHorizontal: 12,
     paddingVertical: 6,
     marginBottom: 12,
   },
-  warning: { color: '#DC2626', fontSize: 14, textAlign: 'center' },
-  versionLink: { marginTop: 20, padding: 8 },
-  versionText: { fontSize: 13, color: '#9CA3AF' },
+  warning: { color: COLORS.redDark, fontSize: 14, fontFamily: FONTS.bodyMedium, textAlign: 'center' },
+  versionLink: { marginTop: 18, padding: 8 },
+  versionText: { fontSize: 13, color: COLORS.inkSoft, fontFamily: FONTS.body },
 });

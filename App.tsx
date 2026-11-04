@@ -1,3 +1,6 @@
+import { Heebo_400Regular, Heebo_600SemiBold, Heebo_700Bold } from '@expo-google-fonts/heebo';
+import { Rubik_800ExtraBold, Rubik_900Black } from '@expo-google-fonts/rubik';
+import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { I18nManager, Platform, SafeAreaView, StyleSheet } from 'react-native';
@@ -23,6 +26,13 @@ if (Platform.OS === 'web') {
 }
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    Heebo_400Regular,
+    Heebo_600SemiBold,
+    Heebo_700Bold,
+    Rubik_800ExtraBold,
+    Rubik_900Black,
+  });
   const [screen, setScreen] = useState<Screen>('menu');
   const [mode, setMode] = useState<GameMode>('time');
   const [categories, setCategories] = useState<Character['category'][]>(ACTIVE_CATEGORIES);
@@ -59,6 +69,8 @@ export default function App() {
   const backToMenu = () => setScreen('menu');
   const showChangelog = () => setScreen('changelog');
 
+  if (!fontsLoaded) return null;
+
   return (
     <SafeAreaView style={styles.container}>
       {screen === 'menu' && (
@@ -89,6 +101,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF7ED',
+    backgroundColor: '#FFF3D6',
   },
 });
