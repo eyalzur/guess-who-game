@@ -118,22 +118,21 @@ export default function AnimatedPhoto({ children }: { children: React.ReactNode 
       ];
       break;
     case 'wiggle':
+      // rotate only — mixing rotate with a translate here made it orbit
+      // around a corner instead of spinning in place
       idleTransform = [
-        { rotate: idle.interpolate({ inputRange: [0, 1], outputRange: [`${-5 * size}deg`, `${5 * size}deg`] }) },
-        { translateX: idle.interpolate({ inputRange: [0, 1], outputRange: [-4 * size, 4 * size] }) },
+        { rotate: idle.interpolate({ inputRange: [0, 1], outputRange: [`${-6 * size}deg`, `${6 * size}deg`] }) },
       ];
       break;
     case 'drift':
       idleTransform = [
         { translateX: idle.interpolate({ inputRange: [0, 1], outputRange: [-10 * size, 10 * size] }) },
-        { rotate: idle.interpolate({ inputRange: [0, 1], outputRange: [`${-2 * size}deg`, `${2 * size}deg`] }) },
       ];
       break;
     case 'float':
     default:
       idleTransform = [
         { translateY: idle.interpolate({ inputRange: [0, 1], outputRange: [0, -10 * size] }) },
-        { rotate: idle.interpolate({ inputRange: [0, 1], outputRange: [`${-3 * size}deg`, `${3 * size}deg`] }) },
       ];
   }
 
