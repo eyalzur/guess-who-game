@@ -7,6 +7,16 @@ export type ChangelogEntry = {
 // Newest first. Bump app.json's "version" field together with a new entry here.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.4.0',
+    date: '2026-11-06',
+    changes: [
+      'פישוט גדול: הוסר מסך הניצחון/תוצאה, אין יותר "ניצחנו" וכל הבלה-בלה',
+      'מסך אחד: רואים דמות, לוחצים על התמונה ומקבלים דמות הבאה',
+      'טיימר של 60 שניות; כשהוא מגיע לסוף, עוברים אוטומטית לדמות הבאה',
+      'הוסר מצב "לפי שאלות" — נשאר רק טיימר, פשוט וברור',
+    ],
+  },
+  {
     version: '1.3.0',
     date: '2026-11-04',
     changes: [

@@ -5,7 +5,6 @@ import BounceIn from '../components/BounceIn';
 import ScreenBackground from '../components/ScreenBackground';
 import { ALL_CATEGORIES, CATEGORY_LABELS, Character } from '../data/characters';
 import { CURRENT_VERSION } from '../data/changelog';
-import { GameMode } from '../game/types';
 import { COLORS, FONTS, GRADIENT_MENU, RADIUS } from '../theme';
 
 type Props = {
@@ -13,7 +12,7 @@ type Props = {
   onToggleCategory: (category: Character['category']) => void;
   onSelectAllCategories: () => void;
   onClearCategories: () => void;
-  onSelectMode: (mode: GameMode) => void;
+  onStart: () => void;
   onShowChangelog: () => void;
 };
 
@@ -38,7 +37,7 @@ export default function MenuScreen({
   onToggleCategory,
   onSelectAllCategories,
   onClearCategories,
-  onSelectMode,
+  onStart,
   onShowChangelog,
 }: Props) {
   const canStart = selectedCategories.length > 0;
@@ -95,18 +94,10 @@ export default function MenuScreen({
         </View>
       )}
 
-      <Text style={styles.subtitle}>איך נשחק?</Text>
       <BigButton
-        label={'⏱️ לפי זמן (60 שניות)'}
-        onPress={() => canStart && onSelectMode('time')}
+        label={'🎮 התחילו לשחק!'}
+        onPress={() => canStart && onStart()}
         color={COLORS.blue}
-        disabled={!canStart}
-        pulse={canStart}
-      />
-      <BigButton
-        label={'❓ לפי שאלות (10 שאלות)'}
-        onPress={() => canStart && onSelectMode('questions')}
-        color={COLORS.green}
         disabled={!canStart}
         pulse={canStart}
       />
