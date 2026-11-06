@@ -1,3 +1,4 @@
+import { useAudioPlayer } from 'expo-audio';
 import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import AnimatedPhoto from '../components/AnimatedPhoto';
@@ -8,9 +9,14 @@ import HiddenCover from '../components/HiddenCover';
 import PeekButton from '../components/PeekButton';
 import ScreenBackground from '../components/ScreenBackground';
 import TimerRing from '../components/TimerRing';
+import UrgentFlash from '../components/UrgentFlash';
+import { MUSIC_TRACKS } from '../audio/tracks';
 import type { Character } from '../data/characters';
 import { TIME_LIMIT_SECONDS } from '../game/types';
 import { COLORS, FONTS, GRADIENT_GAME, RADIUS } from '../theme';
+
+const RUSH_SECONDS = 10;
+const RUSH_PLAYBACK_RATE = 1.5;
 
 type Props = {
   character: Character;
@@ -27,7 +33,7 @@ const BADGE_TEXT: Record<Phase, string> = {
 };
 
 function timerColor(secondsLeft: number): string {
-  if (secondsLeft <= 10) return COLORS.red;
+  if (secondsLeft <= RUSH_SECONDS) return COLORS.red;
   if (secondsLeft <= 30) return COLORS.orange;
   return COLORS.green;
 }
@@ -61,6 +67,62 @@ export default function GameScreen({ character, onNext, onMenu }: Props) {
     return () => clearInterval(id);
   }, [counting, character.id]);
 
+  const urgent = counting && secondsLeft <= RUSH_SECONDS && secondsLeft > 0;
+
+  // one player per track (hook rule: called unconditionally, same order every render);
+  // only the currently-picked track is ever played, the rest stay paused
+  const players = [
+    useAudioPlayer(MUSIC_TRACKS[0]),
+    useAudioPlayer(MUSIC_TRACKS[1]),
+    useAudioPlayer(MUSIC_TRACKS[2]),
+    useAudioPlayer(MUSIC_TRACKS[3]),
+    useAudioPlayer(MUSIC_TRACKS[4]),
+  ];
+  const [trackIndex, setTrackIndex] = useState(() => Math.floor(Math.random() * MUSIC_TRACKS.length));
+
+  // new round, new (non-repeating) song
+  useEffect(() => {
+    setTrackIndex((prev) => {
+      if (MUSIC_TRACKS.length <= 1) return 0;
+      let next = Math.floor(Math.random() * MUSIC_TRACKS.length);
+      while (next === prev) next = Math.floor(Math.random() * MUSIC_TRACKS.length);
+      return next;
+    });
+  }, [character.id]);
+
+  useEffect(() => {
+    players.forEach((p, i) => {
+      p.loop = true;
+      if (i !== trackIndex) {
+        p.pause();
+        try {
+          p.seekTo(0);
+        } catch {
+          // player not loaded yet — harmless, next play() will start from 0 anyway
+        }
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trackIndex]);
+
+  useEffect(() => {
+    const active = players[trackIndex];
+    if (!active) return;
+    active.playbackRate = urgent ? RUSH_PLAYBACK_RATE : 1.0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urgent, trackIndex]);
+
+  useEffect(() => {
+    const active = players[trackIndex];
+    if (!active) return;
+    if (counting) {
+      active.play();
+    } else {
+      active.pause();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [counting, trackIndex]);
+
   const handleTap = () => {
     if (phase === 'shown') setPhase('hidden');
     else if (phase === 'hidden') setPhase('revealed');
@@ -71,6 +133,7 @@ export default function GameScreen({ character, onNext, onMenu }: Props) {
 
   return (
     <ScreenBackground colors={GRADIENT_GAME}>
+      <UrgentFlash active={urgent} />
       <BackButton onPress={onMenu} />
       <PeekButton onPeekStart={() => setPeeking(true)} onPeekEnd={() => setPeeking(false)} />
 
@@ -87,7 +150,7 @@ export default function GameScreen({ character, onNext, onMenu }: Props) {
         secondsLeft={secondsLeft}
         totalSeconds={TIME_LIMIT_SECONDS}
         color={counting ? timerColor(secondsLeft) : COLORS.gray}
-        urgent={counting && secondsLeft <= 10 && secondsLeft > 0}
+        urgent={urgent}
       />
       {!counting && <Text style={styles.pausedHint}>⏸ הטיימר רץ רק כשהתמונה מוסתרת</Text>}
       <BigButton label="➡️ דמות הבאה" onPress={onNext} color={COLORS.purple} size="md" />
