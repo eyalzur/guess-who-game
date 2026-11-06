@@ -18,6 +18,17 @@ if (Platform.OS === 'web') {
     doc.documentElement.dir = 'rtl';
     doc.documentElement.lang = 'he';
   }
+  // it's a touch game, not a text page — a long-press (e.g. holding the
+  // peek eye button) must not trigger the browser's text-selection highlight
+  if (doc?.head && !doc.getElementById('no-select-style')) {
+    const style = doc.createElement('style');
+    style.id = 'no-select-style';
+    style.textContent = `
+      * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+      img { -webkit-user-drag: none; user-drag: none; }
+    `;
+    doc.head.appendChild(style);
+  }
 } else if (!I18nManager.isRTL) {
   I18nManager.allowRTL(true);
   I18nManager.forceRTL(true);
