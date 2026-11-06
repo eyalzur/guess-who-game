@@ -7,6 +7,15 @@ export type ChangelogEntry = {
 // Newest first. Bump app.json's "version" field together with a new entry here.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.6.0',
+    date: '2026-11-06',
+    changes: [
+      'הטיימר רץ רק כשהתמונה מוסתרת — כל עוד היא חשופה, השעון בהפסקה',
+      'אפשר להציץ שוב בתמונה בכל רגע (לחיצה נוספת), בלי להפסיד זמן',
+      'כפתור "דמות הבאה" נפרד, כדי לא לחכות לטיימר אם רוצים לדלג',
+    ],
+  },
+  {
     version: '1.5.1',
     date: '2026-11-06',
     changes: ['תיקון: בחלק מהאנימציות התמונה "סחפה" לפינה במקום לנוע במקום'],

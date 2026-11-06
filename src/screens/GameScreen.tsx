@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import AnimatedPhoto from '../components/AnimatedPhoto';
 import Avatar from '../components/Avatar';
 import BackButton from '../components/BackButton';
+import BigButton from '../components/BigButton';
 import HiddenCover from '../components/HiddenCover';
 import ScreenBackground from '../components/ScreenBackground';
 import TimerRing from '../components/TimerRing';
@@ -16,12 +17,11 @@ type Props = {
   onMenu: () => void;
 };
 
-type Phase = 'shown' | 'hidden' | 'revealed';
+type Phase = 'shown' | 'hidden';
 
 const BADGE_TEXT: Record<Phase, string> = {
   shown: 'לחצו להסתיר 🙈',
-  hidden: 'לחצו לחשוף 👀',
-  revealed: 'לחצו לדמות הבאה ➡️',
+  hidden: 'לחצו להציץ שוב 👀',
 };
 
 function timerColor(secondsLeft: number): string {
@@ -34,46 +34,50 @@ export default function GameScreen({ character, onNext, onMenu }: Props) {
   const [secondsLeft, setSecondsLeft] = useState(TIME_LIMIT_SECONDS);
   const [phase, setPhase] = useState<Phase>('shown');
 
-  // every new character starts fresh: visible, full countdown
+  // every new character starts fresh: visible, full countdown, timer paused
   useEffect(() => {
     setPhase('shown');
-  }, [character.id]);
-
-  useEffect(() => {
     setSecondsLeft(TIME_LIMIT_SECONDS);
-    const start = Date.now();
-    const id = setInterval(() => {
-      const remaining = Math.max(0, TIME_LIMIT_SECONDS - Math.floor((Date.now() - start) / 1000));
-      setSecondsLeft(remaining);
-      if (remaining <= 0) onNext();
-    }, 250);
-    return () => clearInterval(id);
   }, [character.id]);
 
-  const handleTap = () => {
-    if (phase === 'shown') setPhase('hidden');
-    else if (phase === 'hidden') setPhase('revealed');
-    else onNext();
-  };
+  // the countdown only ticks while the photo is hidden — looking at it
+  // (shown) pauses the clock, so "take a look again" costs nothing
+  useEffect(() => {
+    if (phase !== 'hidden') return;
+    const id = setInterval(() => {
+      setSecondsLeft((s) => {
+        if (s <= 1) {
+          onNext();
+          return TIME_LIMIT_SECONDS;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [phase, character.id]);
+
+  const toggleHidden = () => setPhase((p) => (p === 'shown' ? 'hidden' : 'shown'));
 
   return (
     <ScreenBackground colors={GRADIENT_GAME}>
       <BackButton onPress={onMenu} />
       <AnimatedPhoto key={character.id}>
-        <Pressable onPress={handleTap} accessibilityRole="button" accessibilityLabel={BADGE_TEXT[phase]}>
+        <Pressable onPress={toggleHidden} accessibilityRole="button" accessibilityLabel={BADGE_TEXT[phase]}>
           {phase === 'hidden' ? <HiddenCover size={220} /> : <Avatar character={character} size={220} />}
         </Pressable>
       </AnimatedPhoto>
       <Text style={styles.name}>{phase === 'hidden' ? ' ' : character.name}</Text>
-      <Pressable onPress={handleTap} accessibilityRole="button" style={styles.badge}>
+      <Pressable onPress={toggleHidden} accessibilityRole="button" style={styles.badge}>
         <Text style={styles.badgeText}>{BADGE_TEXT[phase]}</Text>
       </Pressable>
       <TimerRing
         secondsLeft={secondsLeft}
         totalSeconds={TIME_LIMIT_SECONDS}
-        color={timerColor(secondsLeft)}
-        urgent={secondsLeft <= 10 && secondsLeft > 0}
+        color={phase === 'hidden' ? timerColor(secondsLeft) : COLORS.gray}
+        urgent={phase === 'hidden' && secondsLeft <= 10 && secondsLeft > 0}
       />
+      {phase === 'shown' && <Text style={styles.pausedHint}>⏸ הטיימר רץ רק כשהתמונה מוסתרת</Text>}
+      <BigButton label="➡️ דמות הבאה" onPress={onNext} color={COLORS.purple} size="md" />
     </ScreenBackground>
   );
 }
@@ -102,6 +106,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FONTS.bodyBold,
     color: COLORS.purpleDark,
+    textAlign: 'center',
+  },
+  pausedHint: {
+    fontSize: 13,
+    fontFamily: FONTS.bodyMedium,
+    color: COLORS.inkSoft,
+    marginTop: 6,
     textAlign: 'center',
   },
 });
