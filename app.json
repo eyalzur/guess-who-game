@@ -2,7 +2,7 @@
   "expo": {
     "name": "guess-who",
     "slug": "guess-who",
-    "version": "1.12.0",
+    "version": "1.13.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

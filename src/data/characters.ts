@@ -119,7 +119,7 @@ export const CHARACTERS: Character[] = [
   { id: 'thumbelina', name: 'אצבעוני', category: 'intl-character', gender: 'm' },
   { id: 'tinkerbell', name: 'טינקרבל', category: 'intl-character', gender: 'f' },
   { id: 'queen-of-hearts', name: 'מלכת הלבבות', category: 'intl-character', gender: 'f' },
-  { id: 'white-rabbit', name: 'השפן הלבן', category: 'intl-character', gender: 'm' },
+  { id: 'white-rabbit', name: 'השפן הממהר מאליזה בארץ הפלאות', category: 'intl-character', gender: 'm' },
   { id: 'peter-pan', name: 'פיטר פן', category: 'intl-character', gender: 'm' },
   { id: 'ugly-duckling-swan', name: 'הברבור מהברווזון המכוער', category: 'intl-character', gender: 'm' },
   { id: 'hansel-and-gretel', name: 'עמי ותמי', category: 'intl-character', gender: 'm' },
