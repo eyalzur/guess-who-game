@@ -41,7 +41,6 @@ const PHOTOS: Record<string, number> = {
   'darth-vader': require('../../assets/characters/darth-vader.png'),
   'donkey-shrek': require('../../assets/characters/donkey-shrek.png'),
   dora: require('../../assets/characters/dora.png'),
-  doraemon: require('../../assets/characters/doraemon.png'),
   'dudu-topaz': require('../../assets/characters/dudu-topaz.png'),
   'eden-ben-zaken': require('../../assets/characters/eden-ben-zaken.png'),
   'eden-golan': require('../../assets/characters/eden-golan.png'),
