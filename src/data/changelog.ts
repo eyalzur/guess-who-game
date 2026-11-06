@@ -7,6 +7,14 @@ export type ChangelogEntry = {
 // Newest first. Bump app.json's "version" field together with a new entry here.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.8.0',
+    date: '2026-11-06',
+    changes: [
+      'אייקון חדש וצבעוני לגמרי, בסגנון המשחק (במקום הסמל הגנרי שהיה)',
+      'עכשיו אפשר להוסיף את המשחק למסך הבית עם אייקון יפה, לא ריק',
+    ],
+  },
+  {
     version: '1.7.1',
     date: '2026-11-06',
     changes: ['תיקון: החזקה על כפתור העין (או כל מקום אחר) לא מסמנת טקסט בכחול יותר'],
