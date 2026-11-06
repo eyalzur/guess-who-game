@@ -7,6 +7,14 @@ export type ChangelogEntry = {
 // Newest first. Bump app.json's "version" field together with a new entry here.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.12.0',
+    date: '2026-11-06',
+    changes: [
+      '33 דמויות חדשות מעולם האגדות: סינדרלה, שלגיה, פיטר פן, אריאל, פינוקיו, אליזה בארץ הפלאות ועוד הרבה',
+      'וגם: ליצן, דרקון, רוח רפאים, קוסם, אביר, תמנון ואדם קדמון',
+    ],
+  },
+  {
     version: '1.11.0',
     date: '2026-11-06',
     changes: [
