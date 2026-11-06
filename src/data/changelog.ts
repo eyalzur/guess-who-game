@@ -7,6 +7,14 @@ export type ChangelogEntry = {
 // Newest first. Bump app.json's "version" field together with a new entry here.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.6.1',
+    date: '2026-11-06',
+    changes: [
+      'כל המסך לוחץ להסתרה — לא צריך לדייק על התמונה',
+      'רק לחיצה על הכרטיס עצמו מציצה בתמונה שוב, כדי שלא יחשפו בטעות',
+    ],
+  },
+  {
     version: '1.6.0',
     date: '2026-11-06',
     changes: [

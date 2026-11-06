@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import AnimatedPhoto from '../components/AnimatedPhoto';
 import Avatar from '../components/Avatar';
 import BackButton from '../components/BackButton';
@@ -19,9 +19,9 @@ type Props = {
 
 type Phase = 'shown' | 'hidden';
 
-const BADGE_TEXT: Record<Phase, string> = {
-  shown: 'לחצו להסתיר 🙈',
-  hidden: 'לחצו להציץ שוב 👀',
+const HINT_TEXT: Record<Phase, string> = {
+  shown: 'לחצו בכל מקום על המסך כדי להסתיר 🙈',
+  hidden: 'שכחתם? לחצו על הכרטיס כדי להציץ 👀',
 };
 
 function timerColor(secondsLeft: number): string {
@@ -56,20 +56,31 @@ export default function GameScreen({ character, onNext, onMenu }: Props) {
     return () => clearInterval(id);
   }, [phase, character.id]);
 
-  const toggleHidden = () => setPhase((p) => (p === 'shown' ? 'hidden' : 'shown'));
-
   return (
     <ScreenBackground colors={GRADIENT_GAME}>
+      {/* sits behind every other element — tapping anywhere outside the
+          card hides the photo; a big, forgiving target on purpose */}
+      <Pressable
+        style={StyleSheet.absoluteFill}
+        onPress={() => setPhase('hidden')}
+        accessibilityRole="button"
+        accessibilityLabel="הסתר תמונה"
+      />
+
       <BackButton onPress={onMenu} />
       <AnimatedPhoto key={character.id}>
-        <Pressable onPress={toggleHidden} accessibilityRole="button" accessibilityLabel={BADGE_TEXT[phase]}>
+        <Pressable
+          onPress={() => setPhase('shown')}
+          accessibilityRole="button"
+          accessibilityLabel="הצג תמונה"
+        >
           {phase === 'hidden' ? <HiddenCover size={220} /> : <Avatar character={character} size={220} />}
         </Pressable>
       </AnimatedPhoto>
       <Text style={styles.name}>{phase === 'hidden' ? ' ' : character.name}</Text>
-      <Pressable onPress={toggleHidden} accessibilityRole="button" style={styles.badge}>
-        <Text style={styles.badgeText}>{BADGE_TEXT[phase]}</Text>
-      </Pressable>
+      <View style={styles.badge}>
+        <Text style={styles.badgeText}>{HINT_TEXT[phase]}</Text>
+      </View>
       <TimerRing
         secondsLeft={secondsLeft}
         totalSeconds={TIME_LIMIT_SECONDS}
