@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, Dimensions, Easing, StyleSheet, Text, View } from 'react-native';
 
 const EMOJI = ['⭐️', '✨', '🎈', '🎊', '💫', '🌟'];
-const { width: SCREEN_W } = Dimensions.get('window');
+const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
 
 type Piece = {
   emoji: string;
@@ -14,16 +14,22 @@ type Piece = {
   drift: number;
 };
 
-function makePieces(count: number): Piece[] {
-  return Array.from({ length: count }).map((_, i) => ({
-    emoji: EMOJI[i % EMOJI.length],
-    left: Math.random() * Math.min(SCREEN_W, 440),
-    top: Math.random() * 640,
-    size: 16 + Math.random() * 14,
-    duration: 2600 + Math.random() * 1800,
-    delay: Math.random() * 1200,
-    drift: 10 + Math.random() * 14,
-  }));
+// fractions of screen height (0..1) the pieces are allowed to appear in —
+// lets a screen keep decor out of a busy content area by passing e.g.
+// [[0, 0.1], [0.82, 1]] (just the header sliver and the bottom margin)
+function makePieces(count: number, bands: Array<[number, number]>): Piece[] {
+  return Array.from({ length: count }).map((_, i) => {
+    const [bandFrom, bandTo] = bands[Math.floor(Math.random() * bands.length)];
+    return {
+      emoji: EMOJI[i % EMOJI.length],
+      left: Math.random() * Math.min(SCREEN_W, 440),
+      top: (bandFrom + Math.random() * (bandTo - bandFrom)) * SCREEN_H,
+      size: 16 + Math.random() * 14,
+      duration: 2600 + Math.random() * 1800,
+      delay: Math.random() * 1200,
+      drift: 10 + Math.random() * 14,
+    };
+  });
 }
 
 function DecorPiece({ piece }: { piece: Piece }) {
@@ -71,8 +77,10 @@ function DecorPiece({ piece }: { piece: Piece }) {
   );
 }
 
-export default function FloatingDecor({ count = 10 }: { count?: number }) {
-  const pieces = useRef(makePieces(count)).current;
+type Props = { count?: number; verticalBands?: Array<[number, number]> };
+
+export default function FloatingDecor({ count = 10, verticalBands = [[0, 1]] }: Props) {
+  const pieces = useRef(makePieces(count, verticalBands)).current;
   return (
     <View pointerEvents="none" style={styles.container}>
       {pieces.map((p, i) => (

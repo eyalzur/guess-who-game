@@ -9,9 +9,16 @@ type Props = {
   style?: StyleProp<ViewStyle>;
   colors?: readonly string[];
   decor?: boolean;
+  decorBands?: Array<[number, number]>;
 };
 
-export default function ScreenBackground({ children, style, colors = BACKGROUND_GRADIENT, decor = true }: Props) {
+export default function ScreenBackground({
+  children,
+  style,
+  colors = BACKGROUND_GRADIENT,
+  decor = true,
+  decorBands,
+}: Props) {
   return (
     <LinearGradient
       colors={colors as unknown as [string, string, ...string[]]}
@@ -19,7 +26,7 @@ export default function ScreenBackground({ children, style, colors = BACKGROUND_
       end={{ x: 0.3, y: 1 }}
       style={[styles.base, style]}
     >
-      {decor && <FloatingDecor />}
+      {decor && <FloatingDecor verticalBands={decorBands} />}
       {children}
     </LinearGradient>
   );

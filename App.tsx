@@ -7,6 +7,7 @@ import { Animated, I18nManager, Platform, SafeAreaView, StyleSheet } from 'react
 import ChangelogScreen from './src/screens/ChangelogScreen';
 import GameScreen from './src/screens/GameScreen';
 import MenuScreen from './src/screens/MenuScreen';
+import SplashOverlay from './src/components/SplashOverlay';
 import { ACTIVE_CATEGORIES, ALL_CATEGORIES, randomCharacter } from './src/data/characters';
 import type { Character } from './src/data/characters';
 import { Screen } from './src/game/types';
@@ -71,26 +72,52 @@ export default function App() {
     Animated.timing(fade, { toValue: 1, duration: 260, useNativeDriver: true }).start();
   }, [screen]);
 
-  if (!fontsLoaded) return null;
+  // splash stays up at least 1.5s (even once fonts are ready) so it always
+  // reads as a deliberate "loading" beat, not a flash
+  const [minSplashElapsed, setMinSplashElapsed] = useState(false);
+  const [splashMounted, setSplashMounted] = useState(true);
+  const appOpacity = useRef(new Animated.Value(0)).current;
+  const splashOpacity = useRef(new Animated.Value(1)).current;
+  const appReady = fontsLoaded && minSplashElapsed;
+
+  useEffect(() => {
+    const id = setTimeout(() => setMinSplashElapsed(true), 1500);
+    return () => clearTimeout(id);
+  }, []);
+
+  useEffect(() => {
+    if (!appReady) return;
+    Animated.timing(appOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+    Animated.timing(splashOpacity, { toValue: 0, duration: 400, useNativeDriver: true }).start(() => {
+      setSplashMounted(false);
+    });
+  }, [appReady]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.fade, { opacity: fade }]}>
-      {screen === 'menu' && (
-        <MenuScreen
-          selectedCategories={categories}
-          onToggleCategory={toggleCategory}
-          onSelectAllCategories={selectAllCategories}
-          onClearCategories={clearCategories}
-          onStart={startGame}
-          onShowChangelog={showChangelog}
-        />
-      )}
-      {screen === 'changelog' && <ChangelogScreen onMenu={backToMenu} />}
-      {screen === 'game' && (
-        <GameScreen character={character} onNext={nextCharacter} onMenu={backToMenu} />
-      )}
+      <Animated.View style={[styles.fill, { opacity: appOpacity }]} pointerEvents={appReady ? 'auto' : 'none'}>
+        <Animated.View style={[styles.fade, { opacity: fade }]}>
+          {screen === 'menu' && (
+            <MenuScreen
+              selectedCategories={categories}
+              onToggleCategory={toggleCategory}
+              onSelectAllCategories={selectAllCategories}
+              onClearCategories={clearCategories}
+              onStart={startGame}
+              onShowChangelog={showChangelog}
+            />
+          )}
+          {screen === 'changelog' && <ChangelogScreen onMenu={backToMenu} />}
+          {screen === 'game' && (
+            <GameScreen character={character} onNext={nextCharacter} onMenu={backToMenu} />
+          )}
+        </Animated.View>
       </Animated.View>
+      {splashMounted && (
+        <Animated.View style={[styles.fill, { opacity: splashOpacity }]} pointerEvents="none">
+          <SplashOverlay />
+        </Animated.View>
+      )}
       <StatusBar style="auto" />
     </SafeAreaView>
   );
@@ -102,4 +129,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF3D6',
   },
   fade: { flex: 1 },
+  fill: StyleSheet.absoluteFill,
 });

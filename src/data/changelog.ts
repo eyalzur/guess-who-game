@@ -7,6 +7,17 @@ export type ChangelogEntry = {
 // Newest first. Bump app.json's "version" field together with a new entry here.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.9.0',
+    date: '2026-11-06',
+    changes: [
+      'מסך פתיחה חדש וסידור מחדש של תפריט הקטגוריות, כדי שלא יראה מבולגן',
+      'מסך טעינה (ספלאש) חמוד כשפותחים את המשחק',
+      'תמונות חדשות לבאטמן ולרפונזל (הישנות היו קצת מפחידות)',
+      'בלייז הוחלף בברק מקווין',
+      'הוסרו שמוליקיפוד, בן 10 ופין — דמויות שפחות הכרנו',
+    ],
+  },
+  {
     version: '1.8.0',
     date: '2026-11-06',
     changes: [

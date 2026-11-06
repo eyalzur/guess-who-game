@@ -59,7 +59,6 @@ export const CHARACTERS: Character[] = [
   { id: 'tuvia-tzafir', name: 'טוביה צפיר', category: 'il-character', gender: 'm' },
   { id: 'yossi-banai', name: 'יוסי בנאי', category: 'il-character', gender: 'm' },
   { id: 'arik-einstein', name: 'אריק איינשטיין', category: 'il-character', gender: 'm' },
-  { id: 'shmulikipod', name: 'שמוליקיפוד', category: 'il-character', gender: 'm' },
   { id: 'chaim-yavin', name: 'חיים יבין', category: 'il-character', gender: 'm' },
   { id: 'yaakov-ben-sira', name: 'יעקב בן סירא', category: 'il-character', gender: 'm' },
   { id: 'asi-cohen', name: 'אסי כהן', category: 'il-character', gender: 'm' },
@@ -101,11 +100,9 @@ export const CHARACTERS: Character[] = [
   { id: 'bugs-bunny', name: 'באגס באני', category: 'cartoon', gender: 'm' },
   { id: 'daffy-duck', name: 'דאפי דאק', category: 'cartoon', gender: 'm' },
   { id: 'scooby-doo', name: 'סקובי דו', category: 'cartoon', gender: 'm' },
-  { id: 'ben-10', name: 'בן 10', category: 'cartoon', gender: 'm' },
-  { id: 'finn-the-human', name: 'פין', category: 'cartoon', gender: 'm' },
   { id: 'gumball', name: 'גמבול', category: 'cartoon', gender: 'm' },
   { id: 'doraemon', name: 'דורעמון', category: 'cartoon', gender: 'm' },
-  { id: 'blaze', name: 'בלייז', category: 'cartoon', gender: 'm' },
+  { id: 'lightning-mcqueen', name: 'ברק מקווין', category: 'cartoon', gender: 'm' },
 ];
 
 // Default categories played. 'singer' and 'politician' are real people, not
