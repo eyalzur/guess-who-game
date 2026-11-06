@@ -5,6 +5,7 @@ import Avatar from '../components/Avatar';
 import BackButton from '../components/BackButton';
 import BigButton from '../components/BigButton';
 import HiddenCover from '../components/HiddenCover';
+import PeekButton from '../components/PeekButton';
 import ScreenBackground from '../components/ScreenBackground';
 import TimerRing from '../components/TimerRing';
 import type { Character } from '../data/characters';
@@ -17,11 +18,12 @@ type Props = {
   onMenu: () => void;
 };
 
-type Phase = 'shown' | 'hidden';
+type Phase = 'shown' | 'hidden' | 'revealed';
 
-const HINT_TEXT: Record<Phase, string> = {
-  shown: 'לחצו בכל מקום על המסך כדי להסתיר 🙈',
-  hidden: 'שכחתם? לחצו על הכרטיס כדי להציץ 👀',
+const BADGE_TEXT: Record<Phase, string> = {
+  shown: 'לחצו על התמונה להסתיר 🙈',
+  hidden: 'לחצו על התמונה לחשוף 👀',
+  revealed: 'לחצו על התמונה לדמות הבאה ➡️',
 };
 
 function timerColor(secondsLeft: number): string {
@@ -33,17 +35,20 @@ function timerColor(secondsLeft: number): string {
 export default function GameScreen({ character, onNext, onMenu }: Props) {
   const [secondsLeft, setSecondsLeft] = useState(TIME_LIMIT_SECONDS);
   const [phase, setPhase] = useState<Phase>('shown');
+  const [peeking, setPeeking] = useState(false);
 
   // every new character starts fresh: visible, full countdown, timer paused
   useEffect(() => {
     setPhase('shown');
     setSecondsLeft(TIME_LIMIT_SECONDS);
+    setPeeking(false);
   }, [character.id]);
 
-  // the countdown only ticks while the photo is hidden — looking at it
-  // (shown) pauses the clock, so "take a look again" costs nothing
+  // the countdown only ticks while the photo is actually hidden — looking
+  // at it (shown/revealed/peeking) pauses the clock
+  const counting = phase === 'hidden' && !peeking;
   useEffect(() => {
-    if (phase !== 'hidden') return;
+    if (!counting) return;
     const id = setInterval(() => {
       setSecondsLeft((s) => {
         if (s <= 1) {
@@ -54,40 +59,37 @@ export default function GameScreen({ character, onNext, onMenu }: Props) {
       });
     }, 1000);
     return () => clearInterval(id);
-  }, [phase, character.id]);
+  }, [counting, character.id]);
+
+  const handleTap = () => {
+    if (phase === 'shown') setPhase('hidden');
+    else if (phase === 'hidden') setPhase('revealed');
+    else onNext();
+  };
+
+  const visible = peeking || phase !== 'hidden';
 
   return (
     <ScreenBackground colors={GRADIENT_GAME}>
-      {/* sits behind every other element — tapping anywhere outside the
-          card hides the photo; a big, forgiving target on purpose */}
-      <Pressable
-        style={StyleSheet.absoluteFill}
-        onPress={() => setPhase('hidden')}
-        accessibilityRole="button"
-        accessibilityLabel="הסתר תמונה"
-      />
-
       <BackButton onPress={onMenu} />
+      <PeekButton onPeekStart={() => setPeeking(true)} onPeekEnd={() => setPeeking(false)} />
+
       <AnimatedPhoto key={character.id}>
-        <Pressable
-          onPress={() => setPhase('shown')}
-          accessibilityRole="button"
-          accessibilityLabel="הצג תמונה"
-        >
-          {phase === 'hidden' ? <HiddenCover size={220} /> : <Avatar character={character} size={220} />}
+        <Pressable onPress={handleTap} accessibilityRole="button" accessibilityLabel={BADGE_TEXT[phase]}>
+          {visible ? <Avatar character={character} size={220} /> : <HiddenCover size={220} />}
         </Pressable>
       </AnimatedPhoto>
-      <Text style={styles.name}>{phase === 'hidden' ? ' ' : character.name}</Text>
+      <Text style={styles.name}>{visible ? character.name : ' '}</Text>
       <View style={styles.badge}>
-        <Text style={styles.badgeText}>{HINT_TEXT[phase]}</Text>
+        <Text style={styles.badgeText}>{BADGE_TEXT[phase]}</Text>
       </View>
       <TimerRing
         secondsLeft={secondsLeft}
         totalSeconds={TIME_LIMIT_SECONDS}
-        color={phase === 'hidden' ? timerColor(secondsLeft) : COLORS.gray}
-        urgent={phase === 'hidden' && secondsLeft <= 10 && secondsLeft > 0}
+        color={counting ? timerColor(secondsLeft) : COLORS.gray}
+        urgent={counting && secondsLeft <= 10 && secondsLeft > 0}
       />
-      {phase === 'shown' && <Text style={styles.pausedHint}>⏸ הטיימר רץ רק כשהתמונה מוסתרת</Text>}
+      {!counting && <Text style={styles.pausedHint}>⏸ הטיימר רץ רק כשהתמונה מוסתרת</Text>}
       <BigButton label="➡️ דמות הבאה" onPress={onNext} color={COLORS.purple} size="md" />
     </ScreenBackground>
   );
