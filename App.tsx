@@ -8,7 +8,7 @@ import ChangelogScreen from './src/screens/ChangelogScreen';
 import GameScreen from './src/screens/GameScreen';
 import MenuScreen from './src/screens/MenuScreen';
 import SplashOverlay from './src/components/SplashOverlay';
-import { ACTIVE_CATEGORIES, ALL_CATEGORIES, randomCharacter } from './src/data/characters';
+import { ACTIVE_CATEGORIES, ALL_CATEGORIES, buildDeck } from './src/data/characters';
 import type { Character } from './src/data/characters';
 import { Screen } from './src/game/types';
 
@@ -45,7 +45,11 @@ export default function App() {
   });
   const [screen, setScreen] = useState<Screen>('menu');
   const [categories, setCategories] = useState<Character['category'][]>(ACTIVE_CATEGORIES);
-  const [character, setCharacter] = useState<Character>(() => randomCharacter(undefined, ACTIVE_CATEGORIES));
+  const initialDeck = useRef(buildDeck(ACTIVE_CATEGORIES)).current;
+  const [character, setCharacter] = useState<Character>(initialDeck[0]);
+  // remaining shuffled cards for the current game — never repeats a
+  // character until every one in the selected categories has shown once
+  const [deck, setDeck] = useState<Character[]>(initialDeck.slice(1));
 
   const toggleCategory = (category: Character['category']) => {
     setCategories((prev) =>
@@ -57,11 +61,20 @@ export default function App() {
   const clearCategories = () => setCategories([]);
 
   const startGame = () => {
-    setCharacter(randomCharacter(undefined, categories));
+    const [first, ...rest] = buildDeck(categories);
+    setCharacter(first);
+    setDeck(rest);
     setScreen('game');
   };
 
-  const nextCharacter = () => setCharacter((prev) => randomCharacter(prev.id, categories));
+  const nextCharacter = () => {
+    setDeck((prevDeck) => {
+      const d = prevDeck.length > 0 ? prevDeck : buildDeck(categories, character.id);
+      const [next, ...rest] = d;
+      setCharacter(next);
+      return rest;
+    });
+  };
 
   const backToMenu = () => setScreen('menu');
   const showChangelog = () => setScreen('changelog');

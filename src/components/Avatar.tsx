@@ -100,6 +100,7 @@ const PHOTOS: Record<string, number> = {
   'skye-paw-patrol': require('../../assets/characters/skye-paw-patrol.png'),
   'spider-man': require('../../assets/characters/spider-man.png'),
   spongebob: require('../../assets/characters/spongebob.png'),
+  stitch: require('../../assets/characters/stitch.png'),
   static: require('../../assets/characters/static.png'),
   superman: require('../../assets/characters/superman.png'),
   'tom-cat': require('../../assets/characters/tom-cat.png'),

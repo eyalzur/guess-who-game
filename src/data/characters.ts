@@ -86,6 +86,7 @@ export const CHARACTERS: Character[] = [
   { id: 'aladdin', name: 'אלאדין', category: 'intl-character', gender: 'm' },
   { id: 'moana', name: 'מואנה', category: 'intl-character', gender: 'f' },
   { id: 'spongebob', name: 'ספוג\'בוב', category: 'cartoon', gender: 'm' },
+  { id: 'stitch', name: 'סטיץ\'', category: 'cartoon', gender: 'm' },
   { id: 'patrick-star', name: 'פטריק כוכב ים', category: 'cartoon', gender: 'm' },
   { id: 'winnie-the-pooh', name: 'פו הדוב', category: 'cartoon', gender: 'm' },
   { id: 'piglet', name: 'פיגלט', category: 'cartoon', gender: 'm' },
@@ -134,11 +135,25 @@ export function activeCharacters(): Character[] {
   return charactersInCategories(ACTIVE_CATEGORIES);
 }
 
-export function randomCharacter(excludeId?: string, categories: Character['category'][] = ACTIVE_CATEGORIES): Character {
-  const fullPool = charactersInCategories(categories);
-  const pool = fullPool.filter((c) => c.id !== excludeId);
-  // if excluding the current character would empty the pool (e.g. a single
-  // selected category with only one member), just allow a repeat
-  const choices = pool.length > 0 ? pool : fullPool;
-  return choices[Math.floor(Math.random() * choices.length)];
+function shuffle<T>(items: T[]): T[] {
+  const arr = [...items];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// a shuffled "deck" for one game: draw cards off the front (deck.shift()-style
+// via array destructuring) so no character repeats until every character in
+// the selected categories has appeared once. `avoidFirstId` keeps a reshuffle
+// from putting the just-shown character right back at the top of the new deck.
+export function buildDeck(categories: Character['category'][], avoidFirstId?: string): Character[] {
+  const pool = charactersInCategories(categories);
+  const deck = shuffle(pool);
+  if (avoidFirstId && deck.length > 1 && deck[0].id === avoidFirstId) {
+    const j = 1 + Math.floor(Math.random() * (deck.length - 1));
+    [deck[0], deck[j]] = [deck[j], deck[0]];
+  }
+  return deck;
 }
