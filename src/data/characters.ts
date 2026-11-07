@@ -101,7 +101,6 @@ export const CHARACTERS: Character[] = [
   { id: 'bugs-bunny', name: 'באגס באני', category: 'cartoon', gender: 'm' },
   { id: 'daffy-duck', name: 'דאפי דאק', category: 'cartoon', gender: 'm' },
   { id: 'scooby-doo', name: 'סקובי דו', category: 'cartoon', gender: 'm' },
-  { id: 'gumball', name: 'גמבול', category: 'cartoon', gender: 'm' },
   { id: 'lightning-mcqueen', name: 'ספידי מקווין', category: 'cartoon', gender: 'm' },
   { id: 'cinderella-prince', name: 'הנסיך של סינדרלה', category: 'intl-character', gender: 'm' },
   { id: 'genie-aladdin', name: 'השד מאלאדין', category: 'intl-character', gender: 'm' },

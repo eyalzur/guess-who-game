@@ -52,7 +52,6 @@ const PHOTOS: Record<string, number> = {
   'gali-atari': require('../../assets/characters/gali-atari.png'),
   'gideon-saar': require('../../assets/characters/gideon-saar.png'),
   'golda-meir': require('../../assets/characters/golda-meir.png'),
-  gumball: require('../../assets/characters/gumball.png'),
   'harel-skaat': require('../../assets/characters/harel-skaat.png'),
   'harry-potter': require('../../assets/characters/harry-potter.png'),
   hermione: require('../../assets/characters/hermione.png'),
